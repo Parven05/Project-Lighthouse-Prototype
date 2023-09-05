@@ -2,7 +2,7 @@
 ![Engine](https://badgen.net/badge/Engine/Unity/blue)
 ![License](https://badgen.net/badge/license/MIT/green)
 
-# **3D First-Person Horror Game*
+# **3D First-Person Horror Game**
 ![Banner](https://user-images.githubusercontent.com/101796812/258840826-eda469e1-817a-413f-b990-b2b04e22db86.png)
 
 ## **Introduction:**
