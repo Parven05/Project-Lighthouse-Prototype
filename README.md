@@ -9,4 +9,5 @@
 This is a story-driven 3D first-person horror game where players assume the role of a victim investigating a haunted town’s mysterious past. Throughout the game, there are minimal threats, and the focus is on unfolding the narrative.
 
 ## **Official Release:**
-Made for Windows PC, Mac & Linux (Steam) - Will release soon !
+Made for Windows PC, Mac & Linux.
+_Steam release soon_
