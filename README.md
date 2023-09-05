@@ -10,4 +10,5 @@ This is a story-driven 3D first-person horror game where players assume the role
 
 ## **Official Release:**
 Made for Windows PC, Mac & Linux.
-_Steam release soon_
+
+_Steam release soon !_
