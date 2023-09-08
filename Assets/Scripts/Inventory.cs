@@ -7,5 +7,8 @@ public class Inventory : MonoBehaviour
     private List<GatherableSO> gatheredSoList;
 
 
-    
+    private void Start()
+    {
+        
+    }
 }

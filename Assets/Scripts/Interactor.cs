@@ -1,69 +1,89 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Interactor : MonoBehaviour
 {
-    [SerializeField] private float interactRange = 1.5f;
-    [SerializeField] private LayerMask interactLayerMask;
-    private Inventory inventory;
-    private GatherableObject currentInteractedGatherableObject;   // Current Selected Object 
+
+    #region Interaction Variables
+    private Camera camera;                                     // fps Camera ref 
+    [SerializeField] private float interactRange = 2f;         // interation range can be Modify
+    [SerializeField] private LayerMask interactLayerMask;      // interaction Layer
+    [SerializeField] private Transform grabPoint;              // grabPoint that Can be Use to hold Obj.
+    private GatherableObject currentPickedGatherableObject;    //current holding Gatherable reference
+    #endregion
+
+    private Inventory inventory;                               // inventory Ref
+
 
     private void Awake()
     {
         inventory = GetComponent<Inventory>();
+        camera = GetComponentInChildren<Camera>();
     }
     private void Start()
     {
         InputManager.Instance.OnInteractionKeyPerformed += InputManager_Instance_OnInteractionKeyPerformed;  // Subbing On Even
     }
 
-    private void InputManager_Instance_OnInteractionKeyPerformed(object sender, System.EventArgs e)
+    private void InputManager_Instance_OnInteractionKeyPerformed(object sender, EventArgs e)
     {
         Interact();
     }
 
     private void Interact()
     {
-        List<GatherableObject> nearbyGatherableObjects = new List<GatherableObject>();
+        // Checks If player holding Any Object
+        if(HasHoldingObject())   
+        {
+            Debug.Log("Return Old Position");
+            currentPickedGatherableObject.SetParent(null,OnPickUpObjectSuccessfullyMoved);
+            currentPickedGatherableObject = null;
+        }
+        else
+        {
+        // if Holding Nothing Do Step for Hold New
+           CastRay();
+        }
+    }
 
-        Collider[] colliders = Physics.OverlapSphere(transform.position, interactRange, interactLayerMask);
-        foreach(Collider collider in colliders)
+    private void CastRay()
+    {
+        if (!Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, interactRange, interactLayerMask)) return;
+
+        if(hit.collider != null)
         {
-            GatherableObject gatherableObject = collider.GetComponentInParent<GatherableObject>();
-            if (gatherableObject != null)
-            {
-                Debug.Log("Objs Detected Count" + gatherableObject.GetGatherableSO().gatherableObjectName);
-                nearbyGatherableObjects.Add(gatherableObject);
-            }
+           GatherableObject gatherableObject = hit.collider.GetComponentInParent<GatherableObject>();   // Reason Getting From Parent, Parent Has The Script
+           Debug.Log( gatherableObject.GetGatherableSO().gatherableObjectName);
+           currentPickedGatherableObject = gatherableObject;
+           Pickup(currentPickedGatherableObject);
         }
-        // Set Current Nearby Gatherable Item
-        if(nearbyGatherableObjects.Count > 0)
-        {
-            currentInteractedGatherableObject = GetNearGatherableObject(nearbyGatherableObjects);
-            Debug.Log("Nearby Gatherable" + " " + currentInteractedGatherableObject.GetGatherableSO().gatherableObjectName);
-        }
+
+    }
+
+    // Responsible For call Setparent in gatherable object 
+    private void Pickup(GatherableObject gatherableObject)
+    {
+        gatherableObject.SetParent(grabPoint,OnPickUpObjectSuccessfullyMoved);
        
     }
 
-
-    // Get Nearby Obj Using Linq Loop Also Can Usable But It more Readable 
-    private GatherableObject GetNearGatherableObject(List<GatherableObject> nearbyGatherableObjects)
+    private void OnPickUpObjectSuccessfullyMoved(bool isReturning)
     {
-        if (nearbyGatherableObjects.Count == 0)
+        if (isReturning)
         {
-            Debug.Log("List is Empty");
-            return null;
+            Debug.Log("InVentory Ui Closed Take Drop buttons ");
         }
-           
-        var nearGatherableObj = nearbyGatherableObjects.OrderBy(s => Vector3.Distance(transform.position, s.transform.position));  // Using Linq To Get Obj By Distance. 
-        GatherableObject selectedGatherableObject = nearbyGatherableObjects[0];
-        return selectedGatherableObject;
+        else
+        {
+            Debug.Log("InVentory Ui Showed Take Drop buttons ");
+        }
     }
 
-
+    // Returns true When currentPickedOnj != null
+    private bool HasHoldingObject()
+    {
+        return currentPickedGatherableObject != null;
+    }
     // Unsubbing Is Neccessary When Obj Disable And Enable this Might be Create 2 Listners or More
     private void OnDisable()
     {
