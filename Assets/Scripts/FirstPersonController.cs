@@ -8,9 +8,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 #if UNITY_EDITOR
-    using UnityEditor;
+using UnityEditor;
     using System.Net;
 #endif
 
@@ -27,6 +28,7 @@ public class FirstPersonController : MonoBehaviour
     public bool cameraCanMove = true;
     public float mouseSensitivity = 2f;
     public float maxLookAngle = 50f;
+    private float cameraUpAngle;
 
     // Crosshair
     public bool lockCursor = true;
@@ -153,10 +155,10 @@ public class FirstPersonController : MonoBehaviour
     {
         if(lockCursor)
         {
-            Cursor.lockState = CursorLockMode.Locked;
+            SetCurserLockMode(true);
         }
 
-        if(crosshair)
+        if (crosshair)
         {
             crosshairObject.sprite = crosshairImage;
             crosshairObject.color = crosshairColor;
@@ -198,7 +200,13 @@ public class FirstPersonController : MonoBehaviour
         #endregion
     }
 
+    public static void SetCurserLockMode(bool curserLocked)
+    {
+        Cursor.lockState = curserLocked ? CursorLockMode.Locked : CursorLockMode.None;
+    }
+
     float camRotation;
+    
 
     private void Update()
     {
@@ -225,6 +233,8 @@ public class FirstPersonController : MonoBehaviour
             transform.localEulerAngles = new Vector3(0, yaw, 0);
             playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
         }
+       
+
 
         #region Camera Zoom
 
@@ -437,8 +447,19 @@ public class FirstPersonController : MonoBehaviour
                 rb.AddForce(velocityChange, ForceMode.VelocityChange);
             }
         }
+        else
+        {
+            rb.velocity = Vector3.zero;
+        }
 
         #endregion
+    }
+
+    // Can move Camera With Tweening.
+    public void ResetCameraYRotation(float duration,Ease rotEaseMode = Ease.Linear)
+    {
+        playerCamera.transform.DOLocalRotate(new Vector3(
+            playerCamera.transform.rotation.x,0, playerCamera.transform.rotation.z),duration).SetEase(rotEaseMode);
     }
 
     // Sets isGrounded based on a raycast sent straigth down from the player object
