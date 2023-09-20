@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b0ffbbde88771284d914cb40b2050b3e, type: 3}
-  m_Name: KeySO
+  m_Name: Key1SO
   m_EditorClassIdentifier: 
   gatherableObjectPrefab: {fileID: 0}
   gatherableImageSprite: {fileID: 21300000, guid: 7205901b29534054f8e3b9313a475444,
     type: 3}
-  gatherableObjectName: Key
+  gatherableObjectName: Key1
   gatherableType: 3

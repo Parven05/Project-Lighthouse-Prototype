@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
@@ -26,7 +27,7 @@ public class Inventory : MonoBehaviour
         InventoryIconTemplate.OnAnyObjectUsedAndRemoved += RemoveGatherableObjectFromInventoryList;
     }
 
-    private void RemoveGatherableObjectFromInventoryList(GatherableSO gatherableSO)
+    public void RemoveGatherableObjectFromInventoryList(GatherableSO gatherableSO)
     {
        gatheredSoList.Remove(gatherableSO);
        OnGatherableObjectModifiedInInventory?.Invoke(gatheredSoList);
@@ -35,7 +36,6 @@ public class Inventory : MonoBehaviour
     private void AddGatherableObjectToInventory(object sender, EventArgs e)
     {
        gatheredSoList.Add(playerSelectedGatherableObject.GetGatherableSO());
-       Debug.Log("Successfully added To Inventory " + playerSelectedGatherableObject.GetGatherableSO().gatherableObjectName);
 
        OnGatherableObjectModifiedInInventory?.Invoke(gatheredSoList);
 
@@ -59,6 +59,27 @@ public class Inventory : MonoBehaviour
         InventoryUI.Instance.DisableAddObjectInventoryBtn();
     }
 
+    public List<GatherableSO> GetGatheredObjectList()
+    {
+        return gatheredSoList;
+    }
+
+    public bool TryGetGatherableObject(GatherableSO gatherableSOInput,out GatherableSO batterySO)
+    {
+        if(gatheredSoList.Any(s => s == gatherableSOInput)) // founded That Object 
+        {
+            var batterySo = gatheredSoList.Where(s => s == gatherableSOInput).FirstOrDefault(); // Get That Founded
+            batterySO = batterySo;  // Pass Through Parameter
+            RemoveGatherableObjectFromInventoryList(batterySo);
+            return true;
+        }
+        else
+        {
+            batterySO = null;
+            return false;
+        }
+    }
+
     private void OnDisable()
     {
         playerInteractor.onGatherableObjectPicked -= ShowPickUpDropUI;
@@ -67,4 +88,6 @@ public class Inventory : MonoBehaviour
         InventoryUI.Instance.OnAddObjectToInventoryBtnClicked -= AddGatherableObjectToInventory;
         InventoryIconTemplate.OnAnyObjectUsedAndRemoved -= RemoveGatherableObjectFromInventoryList;
     }
+
+   
 }

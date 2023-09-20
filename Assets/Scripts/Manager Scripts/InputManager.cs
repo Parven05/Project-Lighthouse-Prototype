@@ -7,6 +7,8 @@ public class InputManager : MonoBehaviour
     public static InputManager Instance { get; private set; }
     public event EventHandler OnInteractionKeyPerformed;     // This Event Will Be Invoked By Pressing E Key 
     public event EventHandler OnInventoyKeyPerformed;        // This Event Will Be Invoked By Pressing I Key 
+    public event EventHandler OnTorchKeyPerformed;           // This Event Will Be Invoked By Pressing F Key 
+    public event EventHandler OnReloadKeyPerformed;          // This Event Will Be Invoked By Pressing R Key 
 
     public enum ExamineObjectRotateType
     {
@@ -44,6 +46,16 @@ public class InputManager : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.I))
         {
             OnInventoyKeyPerformed?.Invoke(this, EventArgs.Empty);
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            OnTorchKeyPerformed?.Invoke(this, EventArgs.Empty);
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            OnReloadKeyPerformed?.Invoke(this, EventArgs.Empty);
         }
     }
 

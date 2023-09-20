@@ -57,7 +57,7 @@ public class Interactor : MonoBehaviour
     private FirstPersonController firstPersonController;
     #endregion
 
-    
+    private IInteractable interactedEnvObject;
 
     private void Awake()
     {
@@ -86,11 +86,14 @@ public class Interactor : MonoBehaviour
     {
         InputManager.Instance.OnInteractionKeyPerformed += InputManager_Instance_OnInteractionKeyPerformed;  // Subbing On Even
         InventoryUI.Instance.OnAddObjectToInventoryBtnClicked += Inventory_Instance_OnAddObjectToInventoryBtnClicked;
+
+        indigatorTextPrompt.text = string.Empty;
     }
 
     private void Inventory_Instance_OnAddObjectToInventoryBtnClicked(object sender, EventArgs e)
     {
         Drop();
+        indigatorTextPrompt.text = string.Empty;
     }
 
     private void Update()
@@ -166,6 +169,8 @@ public class Interactor : MonoBehaviour
             CanMoveCamera(true);
             //SetCurrentGatheredObject(null);
             oGatherableObjectDropped?.Invoke();
+
+            indigatorTextPrompt.text = string.Empty;
         }
         else
         {
@@ -185,17 +190,25 @@ public class Interactor : MonoBehaviour
 
         if(hit.collider != null)
         {
+            
             GatherableObject gatherableObject = hit.collider.GetComponentInParent<GatherableObject>();   // Reason Getting From Parent, Parent Has The Script
-            Debug.Log(gatherableObject.GetGatherableSO().gatherableObjectName);
+            if(gatherableObject != null)
+            {
+                Debug.Log(gatherableObject.GetGatherableSO().gatherableObjectName);
+                indigatorTextPrompt.text = gatherableObject.GetGatherableSO().gatherableObjectName;
+                SetGrabbedObjectReferences(gatherableObject);
+                Grab();
+                CanMovePlayer(false);
+                ResetCameraYPos();
+                CanMoveCamera(false);
 
-            SetGrabbedObjectReferences(gatherableObject);
-            Grab();
-            CanMovePlayer(false);
-            ResetCameraYPos();
-            CanMoveCamera(false);
+                // invoking Event Sending Data Current Grabbed Gatherable SO
+                onGatherableObjectPicked?.Invoke(currentPickedGatherableObject);
+            }
 
-            // invoking Event Sending Data Current Grabbed Gatherable SO
-            onGatherableObjectPicked?.Invoke(currentPickedGatherableObject);
+            IInteractable interactable = hit.collider.GetComponentInParent<IInteractable>();
+            interactable?.Interact();
+            
         }
 
     }  // this method Just Detect Object with Validation Only Calls By Input
@@ -210,15 +223,22 @@ public class Interactor : MonoBehaviour
 
     private void CheckInteractionUpdate()  // This Method Just Shows That Object Details which is Player Looking
     {
-        indigatorTextPrompt.text = string.Empty;
+        
         Debug.DrawRay(camera.transform.position, camera.transform.forward * interactRange, Color.green);
         if (HasHoldingObject()) return;
 
         if (!Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, interactRange, interactLayerMask))
         {
             if (currentInteractingObject != null)
-                currentInteractingObject.SetActiveSelectedVisual(false);
+                currentInteractingObject.SetActiveSelectedVisual(false);   // resetting visuals
                 currentInteractingObject = null;
+
+            if(interactedEnvObject != null)
+            {
+                interactedEnvObject.SetActiveSelectedVisual(false);        // Resetting visuals
+                interactedEnvObject = null;
+            }
+
             return;
         }
         
@@ -227,10 +247,17 @@ public class Interactor : MonoBehaviour
         if (hit.collider != null)
         {
             GatherableObject gatherableObject = hit.collider.GetComponentInParent<GatherableObject>();
-            currentInteractingObject = gatherableObject;
-            currentInteractingObject.SetActiveSelectedVisual(true);                                                 // Showing Selected visual
-            indigatorTextPrompt.text = " Pick " + gatherableObject.GetGatherableSO().gatherableObjectName;
+            if(gatherableObject != null )
+            {
+                currentInteractingObject = gatherableObject;
+                currentInteractingObject.SetActiveSelectedVisual(true);           // Showing Selected visual
+            }
+
+            IInteractable interactable = hit.collider.GetComponentInParent<IInteractable>();
+            interactedEnvObject = interactable;
+            interactable?.SetActiveSelectedVisual(true);
         }
+        
       
     }
     public void Grab()

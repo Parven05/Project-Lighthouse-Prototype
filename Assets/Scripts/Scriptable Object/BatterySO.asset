@@ -17,3 +17,5 @@ MonoBehaviour:
     type: 3}
   gatherableObjectName: Battery
   gatherableType: 3
+  value: 20
+  countable: 0
