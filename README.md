@@ -2,7 +2,7 @@
 ![Engine](https://badgen.net/badge/Engine/Unity/blue)
 ![License](https://badgen.net/badge/license/MIT/green)
 
-# **3D First-Person Horror Game**
+# **3D First-Person PSX Style Horror Game**
 ![Banner](https://github.com/Parven05/Project-Lighthouse/assets/101796812/874b1b31-5231-4be8-94d4-5206d62d3f26)
 
 ## **Introduction:**
