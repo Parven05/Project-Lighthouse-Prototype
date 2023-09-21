@@ -6,17 +6,29 @@ using UnityEngine;
 
 public class Torch : MonoBehaviour
 {
+    public event EventHandler OnTorchEquiped;
+    public event EventHandler OnTorchUnEquiped;
+
     [SerializeField] private GatherableSO batterySO;   // Ref to the BatterySo 
     [SerializeField] private Light torchFlash;         // Ref to the BatterySo 
     private GatherableSO currentUsingBatterySO;
     [SerializeField] private float currentBatteryHealth = 0;
-    private bool canUseTorch = false;
+    public bool canUseTorch = false;
+
+
+    private void OnEnable()
+    {
+        OnTorchEquiped?.Invoke(this, EventArgs.Empty);
+    }
+
     private void Start()
     {
         currentUsingBatterySO = Instantiate(batterySO);            // Creating new instance So scene Pickup BAtteries Dont Affect
         InputManager.Instance.OnReloadKeyPerformed += InputManager_Instance_OnReloadKeyPerformed;
 
         currentBatteryHealth = currentUsingBatterySO.value;
+
+        OnTorchEquiped?.Invoke(this, EventArgs.Empty);
     }
 
     private void InputManager_Instance_OnReloadKeyPerformed(object sender, EventArgs e)
@@ -75,8 +87,18 @@ public class Torch : MonoBehaviour
         torchFlash.enabled = active;
     }
 
+    public float CurrentBatteryHealth()
+    {
+        return currentBatteryHealth;
+    }
+
+    public float GetBatteryMaxHealth()
+    {
+        return batterySO.value;
+    }
     private void OnDisable()
     {
-       // Inventory.Instance.OnGatherableObjectModifiedInInventory -= CheckBatteryExist;
+        // Inventory.Instance.OnGatherableObjectModifiedInInventory -= CheckBatteryExist;
+        OnTorchUnEquiped?.Invoke(this, EventArgs.Empty);
     }
 }

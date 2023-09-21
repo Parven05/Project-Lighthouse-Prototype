@@ -9,11 +9,12 @@ public class GatherableObject : MonoBehaviour
     [SerializeField] private Quaternion targetFaceRotation;              // facing oject rotation towards player
     private Vector3 oldPosition;                                         // ref to the Orgin Pos 
     private Quaternion oldRotation;                                      // ref to the Old Rot
-    
+    private Transform oldParent;                                         // Ref to the old Parent
     private void Awake()
     {
         oldPosition = transform.position;
         oldRotation = transform.rotation;
+        oldParent = transform.parent;
 
         SetActiveSelectedVisual(false);   // Disable Selected Visual At Start
     }
@@ -41,6 +42,8 @@ public class GatherableObject : MonoBehaviour
             outline.enabled = active;
         }
     }
-
-   
+    public Transform GetOldParent()
+    {
+        return oldParent;
+    }
 }

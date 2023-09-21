@@ -41,6 +41,7 @@ public class Interactor : MonoBehaviour
     private Quaternion grabbedObjectTargetFaceRotation;        // facing oject rotation towards player
     private Vector3 grabbedObjectOldPosition;
     private Quaternion grabbedObjectOldRotation;
+    private Transform grabbedObjectOldParent;
 
     private bool isInspecting;
     private float lerpSpeed = 0.2f;
@@ -118,6 +119,8 @@ public class Interactor : MonoBehaviour
             if (distance < distanceTreshold && facingRotationDistance < rotationDistanceThreshold)
             {
                 Debug.Log("Grab pos Reached");
+                currentInteractingObject.transform.SetParent(grabPoint.transform);
+                currentInteractingObject.transform.localPosition = Vector3.zero;
                 isReachedTargetPosAndRot = true;
             }
         }
@@ -219,6 +222,7 @@ public class Interactor : MonoBehaviour
         grabbedObjectOldPosition = currentPickedGatherableObject.GetOrginPosition();
         grabbedObjectOldRotation = currentPickedGatherableObject.GetOrginRotation();
         grabbedObjectTargetFaceRotation = currentPickedGatherableObject.GetTargetFaceRotation();
+        grabbedObjectOldParent = currentInteractingObject.GetOldParent();
     }
 
     private void CheckInteractionUpdate()  // This Method Just Shows That Object Details which is Player Looking
@@ -286,6 +290,7 @@ public class Interactor : MonoBehaviour
     {
         isInspecting = false;
         isReachedTargetPosAndRot = false;
+        currentInteractingObject.transform.SetParent(grabbedObjectOldParent);
     }
 
 
