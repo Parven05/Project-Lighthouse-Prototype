@@ -7,13 +7,10 @@ using UnityEngine;
 public class ObjectZoomer : MonoBehaviour
 {
     private Camera cameraToZoom;
-    [SerializeField] private float zoomSpeed = 10f;
-    [SerializeField] private float minZoom = 25f;
-    [SerializeField] private float maxZoom = 60f;
+    [SerializeField] private float zoomSpeed = 3f;
+    [SerializeField] private float minZoom = 0.5f;
+    [SerializeField] private float maxZoom = 2f;
 
-    private Transform toZoomObjectTransform;
-
-    private float oldObjectPos;
     private bool canZoomObject;
     private InputManager inputManager;
     private bool isZooming;
@@ -32,7 +29,7 @@ public class ObjectZoomer : MonoBehaviour
 
     private void Update()
     {
-        if (!canZoomObject || toZoomObjectTransform == null) return;
+        if (!canZoomObject) return;
 
         if(inputManager.examineObjectZoomType == InputManager.ExamineObjectZoomType.KeyPadControl)
         {
@@ -60,24 +57,24 @@ public class ObjectZoomer : MonoBehaviour
 
             if (zoomInput != 0)
             {
-                Vector3 zoomDirection = (toZoomObjectTransform.position - Camera.main.transform.position).normalized;
+                Vector3 zoomDirection = (transform.position - cameraToZoom.transform.position).normalized;
 
-                float currentDistance = Vector3.Distance(toZoomObjectTransform.position, Camera.main.transform.position);
+                float currentDistance = Vector3.Distance(transform.position, cameraToZoom.transform.position);
                 float newDistance = Mathf.Clamp(currentDistance + zoomInput * zoomSpeed, minZoom, maxZoom);
 
-                toZoomObjectTransform.position = Camera.main.transform.position + zoomDirection * newDistance;
+                transform.position = cameraToZoom.transform.position + zoomDirection * newDistance;
             }
         }
         else if(inputManager.examineObjectZoomType == InputManager.ExamineObjectZoomType.MouseControl)
         {
 
             float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
-            Vector3 zoomDirection = (toZoomObjectTransform.position - Camera.main.transform.position).normalized;
+            Vector3 zoomDirection = (transform.position - cameraToZoom.transform.position).normalized;
 
-            float currentDistance = Vector3.Distance(toZoomObjectTransform.position, Camera.main.transform.position);
+            float currentDistance = Vector3.Distance(transform.position, cameraToZoom.transform.position);
             float newDistance = Mathf.Clamp(currentDistance + scrollDelta * zoomSpeed, minZoom, maxZoom);
 
-            toZoomObjectTransform.position = Camera.main.transform.position + zoomDirection * newDistance;
+            transform.position = cameraToZoom.transform.position + zoomDirection * newDistance;
 
             if(scrollDelta != 0)
             {
@@ -91,22 +88,26 @@ public class ObjectZoomer : MonoBehaviour
 
     }
 
-    public void SetCanZoomObjectAndZoomAccess(Transform toZoomObjectTransform,bool canZoomObject)
+    public void SetCanZoomObject(bool canZoomObject,float accessDelay = 0)
     {
-        this.toZoomObjectTransform = toZoomObjectTransform;
-        this.canZoomObject = canZoomObject;
-        if(!canZoomObject)
+        if (accessDelay == 0)
         {
-            ResetObjectZoom();
+            this.canZoomObject = canZoomObject;
         }
+        else
+        {
+            StartCoroutine(SetCanZoomObjectWithDelay(canZoomObject, accessDelay));
+        }
+
     }
 
-    private void ResetObjectZoom()
+    private IEnumerator SetCanZoomObjectWithDelay(bool canZoomObject, float accessDelay)
     {
-        
+        yield return new WaitForSeconds(accessDelay);
+        this.canZoomObject = canZoomObject;
     }
 
-    internal bool IsZoomingObject()
+    public bool IsZoomingObject()
     {
         return isZooming;
     }

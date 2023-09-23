@@ -4,13 +4,57 @@ using UnityEngine;
 
 public class FearSystemPoint : MonoBehaviour
 {
-    [SerializeField] private List<Transform> intensiveDarkerPoints;
+    [SerializeField] private float maxDarknessDistance = 20f; 
+    [SerializeField] private float minFearIncreaseRate = 1.0f; // Rate at which fear increases per second
+    [SerializeField] private float maxFearIncreaseRate = 5.0f; // Rate at which fear increases per second
+
+    private Transform targetvictimTranform;
+    private PlayerFearSystem playerFearSystem;
+
 
     private void OnTriggerStay(Collider other)
     {
-        if(other.TryGetComponent(out HealthSystem healthSystem))
+        if(other.TryGetComponent(out PlayerFearSystem playerFearSystem))
         {
-            healthSystem.DecreaseHealth(0.5f * Time.deltaTime);
+            Debug.Log("Player Entered");
+            targetvictimTranform = playerFearSystem.gameObject.transform;
+            this.playerFearSystem = playerFearSystem;
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.TryGetComponent(out PlayerFearSystem playerFearSystem))
+        {
+            Debug.Log("Player Exited");
+            playerFearSystem.NormalizeFearLevel();
+            targetvictimTranform = null;
+            playerFearSystem = null;
+        }
+    }
+
+    private void Update()
+    {
+        if (targetvictimTranform != null)
+        {
+            float deepDarkToVictimDistance = Vector3.Distance(transform.position, targetvictimTranform.position);
+
+            if (deepDarkToVictimDistance < maxDarknessDistance)
+            {
+                // Calculate the fear increase rate based on distance
+                float t = 1.0f - Mathf.Clamp01(deepDarkToVictimDistance / maxDarknessDistance); // Invert the clamp
+                float currentFearIncreaseRate = Mathf.Lerp(minFearIncreaseRate, maxFearIncreaseRate, t);
+
+                playerFearSystem.IncreaseFearLevel(currentFearIncreaseRate * Time.deltaTime); // Increase fear over time
+            }
+
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireSphere(transform.position, maxDarknessDistance);
+
     }
 }

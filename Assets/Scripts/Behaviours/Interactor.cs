@@ -3,8 +3,6 @@ using System;
 using TMPro;
 using UnityEngine;
 
-[RequireComponent(typeof(ObjectRotator))]
-[RequireComponent(typeof(ObjectZoomer))]
 public class Interactor : MonoBehaviour
 {
     #region Events
@@ -35,19 +33,7 @@ public class Interactor : MonoBehaviour
     private GatherableObject currentPickedGatherableObject;    //current holding Gatherable reference
     private GatherableObject currentInteractingObject;         // current Selected(Ray just Touched) Object
 
-    private ObjectRotator objectRotator;                       // ref for Obj Rotator Handles rotation
-    private ObjectZoomer objectZoomer;                         // ref for Object Zoomer Handles Zoom in out
 
-    private Quaternion grabbedObjectTargetFaceRotation;        // facing oject rotation towards player
-    private Vector3 grabbedObjectOldPosition;
-    private Quaternion grabbedObjectOldRotation;
-    private Transform grabbedObjectOldParent;
-
-    private bool isInspecting;
-    private float lerpSpeed = 0.2f;
-    private float distanceTreshold = 0.1f;
-    private float rotationDistanceThreshold = 0.1f;
-    private bool isReachedTargetPosAndRot;
     #endregion
 
     #region Ui variables
@@ -64,8 +50,6 @@ public class Interactor : MonoBehaviour
     {
         camera = GetComponentInChildren<Camera>();
         firstPersonController = GetComponent<FirstPersonController>();   
-        objectRotator = GetComponent<ObjectRotator>();
-        objectZoomer = GetComponent<ObjectZoomer>();
         InitializeHoldingType();
     }
 
@@ -93,57 +77,15 @@ public class Interactor : MonoBehaviour
 
     private void Inventory_Instance_OnAddObjectToInventoryBtnClicked(object sender, EventArgs e)
     {
-        Drop();
         indigatorTextPrompt.text = string.Empty;
     }
 
     private void Update()
     {
         UpdateGrabPointOffset();
-        HandleGrabAndDropGrabbaleObject();
     }
 
-    private void HandleGrabAndDropGrabbaleObject()
-    {
-        if (!HasHoldingObject()) return;
-
-        if(isInspecting && !isReachedTargetPosAndRot)
-        {
-            currentPickedGatherableObject.transform.SetPositionAndRotation(Vector3.Lerp(currentPickedGatherableObject.transform.position,
-                grabPoint.position, lerpSpeed), Quaternion.Lerp(currentPickedGatherableObject.transform.rotation,
-                grabbedObjectTargetFaceRotation, lerpSpeed));
-
-            float distance = Vector3.Distance(currentPickedGatherableObject.transform.position, grabPoint.position);
-            float facingRotationDistance = Quaternion.Angle(currentPickedGatherableObject.transform.rotation, grabbedObjectTargetFaceRotation);
-
-            if (distance < distanceTreshold && facingRotationDistance < rotationDistanceThreshold)
-            {
-                Debug.Log("Grab pos Reached");
-                currentInteractingObject.transform.SetParent(grabPoint.transform);
-                currentInteractingObject.transform.localPosition = Vector3.zero;
-                isReachedTargetPosAndRot = true;
-            }
-        }
-        else if(!isInspecting)
-        {
-            
-            currentPickedGatherableObject.transform.SetPositionAndRotation(Vector3.Lerp(currentPickedGatherableObject.transform.position,
-                grabbedObjectOldPosition, lerpSpeed), Quaternion.Lerp(currentPickedGatherableObject.transform.rotation,
-                grabbedObjectOldRotation, lerpSpeed));
-
-            float distance = Vector3.Distance(currentPickedGatherableObject.transform.position, grabbedObjectOldPosition);
-            float rotationDistance = Quaternion.Angle(currentPickedGatherableObject.transform.rotation, grabbedObjectOldRotation);
-
-
-            if (distance < distanceTreshold && rotationDistance < rotationDistanceThreshold)
-            {
-                Debug.Log("Old Pos Reached");
-                SetCurrentGatheredObject(null);
-            }
-            
-        }
-    }
-
+   
     private void UpdateGrabPointOffset()
     {
         // Setting offset to the Grab point
@@ -167,25 +109,21 @@ public class Interactor : MonoBehaviour
         // Checks If player holding Any Object
         if(HasHoldingObject())
         {
-            Drop();
+            currentPickedGatherableObject.Drop();
+            currentPickedGatherableObject = null;
             CanMovePlayer(true);
             CanMoveCamera(true);
-            //SetCurrentGatheredObject(null);
             oGatherableObjectDropped?.Invoke();
 
             indigatorTextPrompt.text = string.Empty;
         }
         else
         {
-        // if Holding Nothing Do Step for Hold New
+           // if Holding Nothing Do Step for Hold New
            CastRay();
         }
     }  // This Method Just responsible for pick And Drop Validation
 
-    private void SetCurrentGatheredObject(GatherableObject gatherableObject)
-    {
-        currentPickedGatherableObject = gatherableObject;
-    }
 
     private void CastRay() 
     {
@@ -193,20 +131,18 @@ public class Interactor : MonoBehaviour
 
         if(hit.collider != null)
         {
-            
-            GatherableObject gatherableObject = hit.collider.GetComponentInParent<GatherableObject>();   // Reason Getting From Parent, Parent Has The Script
-            if(gatherableObject != null)
+            if(hit.collider.TryGetComponent(out GatherableObject gatherableObject))
             {
+                currentPickedGatherableObject = gatherableObject;
+                gatherableObject.Grab(grabPoint, ResetCameraYPos);
                 Debug.Log(gatherableObject.GetGatherableSO().gatherableObjectName);
                 indigatorTextPrompt.text = gatherableObject.GetGatherableSO().gatherableObjectName;
-                SetGrabbedObjectReferences(gatherableObject);
-                Grab();
                 CanMovePlayer(false);
-                ResetCameraYPos();
                 CanMoveCamera(false);
 
-                // invoking Event Sending Data Current Grabbed Gatherable SO
+                // invoking Event Sending Data Current Grabbed Gatherable SO 
                 onGatherableObjectPicked?.Invoke(currentPickedGatherableObject);
+     
             }
 
             IInteractable interactable = hit.collider.GetComponentInParent<IInteractable>();
@@ -215,15 +151,6 @@ public class Interactor : MonoBehaviour
         }
 
     }  // this method Just Detect Object with Validation Only Calls By Input
-
-    private void SetGrabbedObjectReferences(GatherableObject gatherableObject)
-    {
-        SetCurrentGatheredObject(gatherableObject);
-        grabbedObjectOldPosition = currentPickedGatherableObject.GetOrginPosition();
-        grabbedObjectOldRotation = currentPickedGatherableObject.GetOrginRotation();
-        grabbedObjectTargetFaceRotation = currentPickedGatherableObject.GetTargetFaceRotation();
-        grabbedObjectOldParent = currentInteractingObject.GetOldParent();
-    }
 
     private void CheckInteractionUpdate()  // This Method Just Shows That Object Details which is Player Looking
     {
@@ -264,50 +191,21 @@ public class Interactor : MonoBehaviour
         
       
     }
-    public void Grab()
-    {
-        currentPickedGatherableObject.SetActiveSelectedVisual(false);
-        PullGrabbableObject();
-        EffectManager.Instance.SetPostProccessingExaminaionBlurEnabled(true);
-        objectRotator.SetCanRotateObjectAndRotateAccess(currentPickedGatherableObject.gameObject.transform,true);
-        objectZoomer.SetCanZoomObjectAndZoomAccess(currentPickedGatherableObject.gameObject.transform, true);
-    }
-
-    private void PullGrabbableObject()
-    {
-        isInspecting = true;
-    }
-
-    public void Drop()
-    {
-        LeaveGrabbedObject();
-        EffectManager.Instance.SetPostProccessingExaminaionBlurEnabled(false);
-        objectRotator.SetCanRotateObjectAndRotateAccess(null,false);
-        objectZoomer.SetCanZoomObjectAndZoomAccess(null,false);
-    }
-
-    private void LeaveGrabbedObject()
-    {
-        isInspecting = false;
-        isReachedTargetPosAndRot = false;
-        currentInteractingObject.transform.SetParent(grabbedObjectOldParent);
-    }
-
-
     // Returns true When currentPickedOnj != null
     public bool HasHoldingObject()
     {
         return currentPickedGatherableObject != null;
     }
 
-    public GatherableObject GetHoldingObject()
+    public GatherableObject GetHoldingObject() // This Function returns Current holding Object
     {
         return currentPickedGatherableObject;
-    }  // This Function returns Current holding Object
+    }  
 
     private void CanMovePlayer(bool canMovePlayer)
     {
         firstPersonController.playerCanMove = canMovePlayer;
+        firstPersonController.enableHeadBob = canMovePlayer;  // Disable Head bob
     }
     private void CanMoveCamera(bool canMoveCamera)
     {

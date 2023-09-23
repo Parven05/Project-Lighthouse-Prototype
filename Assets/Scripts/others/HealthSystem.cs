@@ -18,13 +18,18 @@ public class HealthSystem : MonoBehaviour
         return health;
     }
 
-    public void AddHealth(float amount)
+    public void SetHealth(float amount)
     {
-        health += amount;
+        health = amount;
     }
 
     public void DecreaseHealth(float amount)
     {
         health -= amount;
+    }
+
+    internal float GetMaxHealth()
+    {
+        return maxHealth;
     }
 }

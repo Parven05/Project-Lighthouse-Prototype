@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,7 @@ public class ObjectRotator : MonoBehaviour
 {
     private bool canRotateObject = false;
     [SerializeField] float rotationSpeed = 2f;
-    private Transform toRotateObjecttransform;
+    //private Transform toRotateObjecttransform;
     private InputManager inputManager;
     private Vector3 dragOrigin;
     private Vector3 toRotateObjCurrentEulerAngles;
@@ -18,7 +19,7 @@ public class ObjectRotator : MonoBehaviour
     void Update()
     {
 
-        if(!canRotateObject || toRotateObjecttransform == null) return;
+        if(!canRotateObject) return;
 
         if(inputManager.examineControlType == InputManager.ExamineObjectRotateType.KeyPadControl)
         {
@@ -66,7 +67,7 @@ public class ObjectRotator : MonoBehaviour
                 isRotating = false;
             }
             // Apply the rotation to the object
-            toRotateObjecttransform.Rotate(rotationX, rotationY, 0f);
+            transform.Rotate(rotationX, rotationY, 0f);
         }
         else if(inputManager.examineControlType == InputManager.ExamineObjectRotateType.MouseControl)
         {
@@ -74,7 +75,7 @@ public class ObjectRotator : MonoBehaviour
             {
                 // Capture the mouse position when the drag starts
                 dragOrigin = Input.mousePosition;
-                toRotateObjCurrentEulerAngles = toRotateObjecttransform.eulerAngles;
+                toRotateObjCurrentEulerAngles = transform.eulerAngles;
                 isRotating = true;
             }
 
@@ -89,7 +90,7 @@ public class ObjectRotator : MonoBehaviour
 
                 // Apply the rotation to the object
                 Vector3 newEulerAngles = toRotateObjCurrentEulerAngles + new Vector3(rotationX, rotationY, 0f);
-                toRotateObjecttransform.rotation = Quaternion.Euler(newEulerAngles);
+                transform.rotation = Quaternion.Euler(newEulerAngles);
                 isRotating = true;
 
             }
@@ -107,10 +108,22 @@ public class ObjectRotator : MonoBehaviour
         return isRotating;
     }
 
-    public void SetCanRotateObjectAndRotateAccess(Transform toRotateObject,bool canRotateObject)
+    public void SetCanRotateObject(bool canRotateObject,float delayAccess = 0)
     {
-        this.toRotateObjecttransform = toRotateObject;
-        this.canRotateObject = canRotateObject;
+        if(delayAccess == 0)
+        {
+            this.canRotateObject = canRotateObject;
+        }
+        else
+        {
+            StartCoroutine(SetCanRotateObjectWithDelay(canRotateObject,delayAccess));
+        }
+       
     }
 
+    private IEnumerator SetCanRotateObjectWithDelay(bool canRotateObject, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        this.canRotateObject = canRotateObject;
+    }
 }
