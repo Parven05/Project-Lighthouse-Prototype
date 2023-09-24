@@ -174,8 +174,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gatherableSO: {fileID: 11400000, guid: 7e1f977b9397d5046b054f7f0dc9ba7f, type: 2}
   targetFaceRotation: {x: 0, y: 0.70710677, z: 0, w: -0.70710677}
-  moveDuration: 0.1
-  easeMode: 1
 --- !u!114 &19858352
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2472,7 +2470,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 297.193, y: 153.78}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &237979853
@@ -4379,8 +4377,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gatherableSO: {fileID: 11400000, guid: 7091d73f23e6b1942966e97b8ff6e4e6, type: 2}
   targetFaceRotation: {x: 0, y: -0.70710677, z: 0, w: 0.70710677}
-  moveDuration: 0.1
-  easeMode: 1
 --- !u!4 &589621339
 Transform:
   m_ObjectHideFlags: 0
@@ -5140,8 +5136,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gatherableSO: {fileID: 11400000, guid: b3472755d3b58f64aacdc003b75de0a3, type: 2}
   targetFaceRotation: {x: 0, y: -0.70710677, z: 0, w: 0.70710677}
-  moveDuration: 0.1
-  easeMode: 1
 --- !u!114 &735789133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5266,7 +5260,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c90d870e85e78f045b1fd941e15bbddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthRefillSpeed: 0.5
+--- !u!114 &744280999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744280964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d453d2c5c2e6fd44822f1cb1d0ee93c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoomSpeed: 10
+  minZoom: 25
+  maxZoom: 60
+--- !u!114 &744281000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744280964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9e2de65c234e9f44bda3966103a0eca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 2
 --- !u!1 &761527439
 GameObject:
   m_ObjectHideFlags: 0
@@ -6166,9 +6187,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b8bce82e470d5349981a2e7aa1c7b0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  indigationImage: {fileID: 311819896}
-  playerCurrentHealthText: {fileID: 908818196}
-  playerHealthSystem: {fileID: 744280992}
 --- !u!1 &884756424
 GameObject:
   m_ObjectHideFlags: 0
@@ -6285,7 +6303,7 @@ MonoBehaviour:
     IsHidden: 0
 --- !u!4 &884756426
 Transform:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -9588,8 +9606,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gatherableSO: {fileID: 11400000, guid: 05e908607ce0e2c418f5dc83284e810d, type: 2}
   targetFaceRotation: {x: 0.008726535, y: 0, z: 0, w: 0.9999619}
-  moveDuration: 0.1
-  easeMode: 1
 --- !u!114 &1159076000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10541,7 +10557,9 @@ Transform:
   m_LocalPosition: {x: 66.6, y: 68.06, z: 17.7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1772036263}
+  - {fileID: 1468132862}
   m_Father: {fileID: 983271834}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1409515151
@@ -10556,9 +10574,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310fcade9f28864459001306da527f98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxDarknessDistance: 32
-  minFearIncreaseRate: 0.5
-  maxFearIncreaseRate: 2
+  intensiveDarkerPoints:
+  - {fileID: 1772036263}
+  - {fileID: 1468132862}
 --- !u!65 &1409515152
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10699,6 +10717,37 @@ MonoBehaviour:
   m_Spacing: {x: 50, y: 50}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!1 &1468132861
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1468132862}
+  m_Layer: 0
+  m_Name: Dark Points (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1468132862
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468132861}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 44.72, y: -3.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1409515150}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!43 &1504549751
 Mesh:
   m_ObjectHideFlags: 0
@@ -11817,8 +11866,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gatherableSO: {fileID: 11400000, guid: 1a3724dc9d0a08540897ed7eb904f5e9, type: 2}
   targetFaceRotation: {x: 0, y: 0.70710677, z: 0, w: -0.70710677}
-  moveDuration: 0.1
-  easeMode: 1
 --- !u!114 &1596704070
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12309,6 +12356,14 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 744280998}
+    - targetCorrespondingSourceObject: {fileID: 4459864850019384750, guid: 6bacecc4f3df9584198879c73a6b6c36,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 744281000}
+    - targetCorrespondingSourceObject: {fileID: 4459864850019384750, guid: 6bacecc4f3df9584198879c73a6b6c36,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 744280999}
     - targetCorrespondingSourceObject: {fileID: 4459864851310106424, guid: 6bacecc4f3df9584198879c73a6b6c36,
         type: 3}
       insertIndex: -1
@@ -12610,6 +12665,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1745906945}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1772036262
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1772036263}
+  m_Layer: 0
+  m_Name: Dark Points
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1772036263
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772036262}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 18.54, y: -3.4, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1409515150}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1780404857
 GameObject:
   m_ObjectHideFlags: 0
@@ -12644,8 +12730,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gatherableSO: {fileID: 11400000, guid: 2ed3e58bb07bca94185699e93d8bdf45, type: 2}
   targetFaceRotation: {x: 0.45451945, y: -0.5416752, z: 0.45451945, w: 0.5416752}
-  moveDuration: 0.1
-  easeMode: 1
 --- !u!4 &1780404859
 Transform:
   m_ObjectHideFlags: 0
@@ -16593,8 +16677,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gatherableSO: {fileID: 11400000, guid: 2d20ee73f95dfa24dbe106e55c31a6a0, type: 2}
   targetFaceRotation: {x: 0, y: -0.70710677, z: 0, w: 0.70710677}
-  moveDuration: 0.1
-  easeMode: 1
 --- !u!4 &2094809838
 Transform:
   m_ObjectHideFlags: 0
