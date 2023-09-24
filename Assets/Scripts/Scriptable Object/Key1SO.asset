@@ -16,4 +16,6 @@ MonoBehaviour:
   gatherableImageSprite: {fileID: 21300000, guid: 7205901b29534054f8e3b9313a475444,
     type: 3}
   gatherableObjectName: Key1
-  gatherableType: 3
+  gatherableType: 1
+  value: 0
+  countable: 0

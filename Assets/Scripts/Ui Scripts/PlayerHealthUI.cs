@@ -16,9 +16,19 @@ public class PlayerHealthUI : MonoBehaviour
         {
            indigationImage.fillAmount = playerHealthSystem.GetHealth() / playerHealthSystem.GetMaxHealth();
         }
+        else
+        {
+            Debug.LogError("No References For Ui Indigation Image");
+        }
+
+
         if(playerCurrentHealthText != null)
         {
            playerCurrentHealthText.text = "Player Health" +":"+ Mathf.RoundToInt(playerHealthSystem.GetHealth());
+        }
+        else
+        {
+            Debug.LogError("No References For Ui Text");
         }
     }
 }

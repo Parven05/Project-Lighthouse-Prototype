@@ -13,8 +13,8 @@ public class GatherableSO : ScriptableObject
 }
 public enum GatherableObjectType  // This Enum Catagarising Objects.
 {
-    Healable,     // if Picked selected Object is Healable like Inhaler
+    Healable,     // Like InHaller
     Collectable,  // Like Keys 
-    Attackable,   // Like Guns Or Simple Weopons like Knife
-    Usable        // Like Torch 
+    Equipable,    // Like Guns Or Simple Weopons like Knife torch
+    Usable        // Like Torch battery
 }

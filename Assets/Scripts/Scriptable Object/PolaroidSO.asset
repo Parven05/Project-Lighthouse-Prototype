@@ -17,3 +17,5 @@ MonoBehaviour:
     type: 3}
   gatherableObjectName: Polaroid Photo
   gatherableType: 1
+  value: 0
+  countable: 0

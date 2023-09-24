@@ -18,3 +18,5 @@ MonoBehaviour:
     type: 3}
   gatherableObjectName: InHaller
   gatherableType: 0
+  value: 20
+  countable: 0

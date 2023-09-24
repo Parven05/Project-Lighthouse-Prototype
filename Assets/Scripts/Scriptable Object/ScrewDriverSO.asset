@@ -16,4 +16,6 @@ MonoBehaviour:
   gatherableImageSprite: {fileID: 21300000, guid: e6f5ee9c899a1e948b587a34fa39390b,
     type: 3}
   gatherableObjectName: Screwdriver
-  gatherableType: 3
+  gatherableType: 2
+  value: 0
+  countable: 0

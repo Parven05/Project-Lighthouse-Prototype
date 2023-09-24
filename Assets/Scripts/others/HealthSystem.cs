@@ -22,6 +22,10 @@ public class HealthSystem : MonoBehaviour
     {
         health = amount;
     }
+    public void AddHealth(float amount)
+    {
+        health += amount;
+    }
 
     public void DecreaseHealth(float amount)
     {

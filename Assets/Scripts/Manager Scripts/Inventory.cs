@@ -89,5 +89,8 @@ public class Inventory : MonoBehaviour
         InventoryIconTemplate.OnAnyObjectUsedAndRemoved -= RemoveGatherableObjectFromInventoryList;
     }
 
-   
+    public GatherableObjectType GetObjectCatagory(GatherableSO gatherableSO)
+    {
+       return gatherableSO.gatherableType;
+    }
 }

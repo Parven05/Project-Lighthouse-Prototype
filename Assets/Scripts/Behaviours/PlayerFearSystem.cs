@@ -2,11 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(HealthSystem))]
 public class PlayerFearSystem : MonoBehaviour
 {
     [SerializeField] private float healthRefillSpeed = 0.5f;
     private HealthSystem healthSystem;
     private bool canHealHealth;
+
+    public enum HealType
+    {
+        AutoHeal,
+        ManualByInhaler,
+        Both
+    }
+    [SerializeField] private HealType healType = HealType.Both; // By Default Both
     private void Awake()
     {
         healthSystem = GetComponent<HealthSystem>();
@@ -29,7 +38,15 @@ public class PlayerFearSystem : MonoBehaviour
     {
         if (canHealHealth)
         {
-            HealHealth();
+            if(healType == HealType.AutoHeal || healType == HealType.Both)
+            {
+                HealHealth();
+            }
+            else if(healType == HealType.ManualByInhaler)
+            {
+                // HAndles by Others
+            }
+           
         }
     }
 
