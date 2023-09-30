@@ -4,6 +4,7 @@ using UnityEngine;
 
 public interface IInteractable
 {
+    Transform GetInteractObjectPos();
     void Interact();
 
     void SetActiveSelectedVisual(bool activeStatus);

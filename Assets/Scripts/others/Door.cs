@@ -8,20 +8,26 @@ public class Door : MonoBehaviour, IInteractable
     [SerializeField] private GatherableSO validKeySO;
     [SerializeField] private Transform doorHinge;
     [SerializeField] private Transform doorKnob;
+    [SerializeField] private Transform handTargetPos;
+
     [SerializeField] private float targetOpenAngle = -90f;
     [SerializeField] private float targetKnobAngle = 90f;
     [SerializeField] private float knobRotateDuration = 0.3f;
     [SerializeField] private float doorOpenDuration = 0.5f;
     [SerializeField] private float doorCloseDuration = 0.4f;
+
     [SerializeField] private Ease easeTypeOpen = Ease.Linear;
     [SerializeField] private Ease easeTypeClose = Ease.Linear;
+
     [SerializeField] private DoorType doorType;
     [SerializeField] private Transform doorFrameCenter;
     [SerializeField] private Transform victimTransform;
+
     private bool isOpenedDoor;
     private bool isGotKey;
     private bool canTrapVictim;
     private bool isVictimTrapped;
+
     [SerializeField] private float doorCloseDistance = 2f;
     [SerializeField] private float dotProductThreshold = 0.2f;
 
@@ -38,7 +44,9 @@ public class Door : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-       DoorToggle();
+       //var fpsControl = FindObjectOfType<FirstPersonController>();
+       //fpsControl.cameraCanMove = false;
+       DoorToggle();  
     }
 
     private void DoorToggle()
@@ -94,7 +102,7 @@ public class Door : MonoBehaviour, IInteractable
                 {
                     //close Door
                     CloseDoor();
-                    Debug.Log("Door Closed");
+                    Debug.Log("Door Locked");
                     DoKnobAnimation();
                 }
                 break;
@@ -135,8 +143,8 @@ public class Door : MonoBehaviour, IInteractable
 
             // Calculate the dot product between the two directions
             float dotProduct = Vector3.Dot(doorToVictimDirection, doorToFrameCenterDirection);
-            Debug.Log("Dot Product Difference" +" " + dotProduct);
-            Debug.Log("Distance Difference" + " " + distanceToVictim);
+            //Debug.Log("Dot Product Difference" +" " + dotProduct);
+            //Debug.Log("Distance Difference" + " " + distanceToVictim);
             // Check if the dot product is Greater than your threshold
             if (dotProduct > dotProductThreshold && distanceToVictim > doorCloseDistance)
             {
@@ -191,4 +199,10 @@ public class Door : MonoBehaviour, IInteractable
             outline.enabled = activeStatus;
         }
     }
+
+    public Transform GetInteractObjectPos()
+    {
+        return handTargetPos;
+    }
+
 }

@@ -33,6 +33,8 @@ public class Torch : MonoBehaviour
 
     private void InputManager_Instance_OnReloadKeyPerformed(object sender, EventArgs e)
     {
+        if (!gameObject.activeInHierarchy) return; // When Torch Only Active
+
         if (Inventory.Instance.TryGetGatherableObject(batterySO,out GatherableSO newBatterySO))
         {
             RemoveOldBatery();
@@ -98,7 +100,8 @@ public class Torch : MonoBehaviour
     }
     private void OnDisable()
     {
-        // Inventory.Instance.OnGatherableObjectModifiedInInventory -= CheckBatteryExist;
+        //InputManager.Instance.OnReloadKeyPerformed -= InputManager_Instance_OnReloadKeyPerformed;
+
         OnTorchUnEquiped?.Invoke(this, EventArgs.Empty);
     }
 }

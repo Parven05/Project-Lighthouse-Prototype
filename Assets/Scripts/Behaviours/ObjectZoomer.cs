@@ -7,7 +7,7 @@ using UnityEngine;
 public class ObjectZoomer : MonoBehaviour
 {
     private Camera cameraToZoom;
-    [SerializeField] private float zoomSpeed = 3f;
+    [SerializeField] private float zoomSpeed = 0.5f;
     [SerializeField] private float minZoom = 0.5f;
     [SerializeField] private float maxZoom = 2f;
 
@@ -35,9 +35,9 @@ public class ObjectZoomer : MonoBehaviour
         {
             float zoomInput = 0;
 
-            if (inputManager.IsPressingZoomInKey())
+            if (inputManager.IsPressingZoomInKeyInKeyBoard())
             {
-                zoomInput += 1.0f;
+                zoomInput += 0.1f;
                 isZooming = true;
             }
             else
@@ -45,9 +45,9 @@ public class ObjectZoomer : MonoBehaviour
                 isZooming = false;
             }
 
-            if (inputManager.IsPressingZoomOutKey())
+            if (inputManager.IsPressingZoomOutKeyInKeyBoard())
             {
-                zoomInput -= 1.0f;
+                zoomInput -= 0.1f;
                 isZooming = true;
             }
             else
@@ -67,8 +67,8 @@ public class ObjectZoomer : MonoBehaviour
         }
         else if(inputManager.examineObjectZoomType == InputManager.ExamineObjectZoomType.MouseControl)
         {
-
-            float scrollDelta = Input.GetAxis("Mouse ScrollWheel");
+            // Old To New Input System
+            float scrollDelta = /*Input.GetAxis("Mouse ScrollWheel");*/ InputManager.Instance.inputActions.Player.ZoomKeysMouse.ReadValue<float>();
             Vector3 zoomDirection = (transform.position - cameraToZoom.transform.position).normalized;
 
             float currentDistance = Vector3.Distance(transform.position, cameraToZoom.transform.position);

@@ -17,6 +17,7 @@ public class Inventory : MonoBehaviour
     {
         Instance = this;
         gatheredSoList = new List<GatherableSO>();
+       
     }
     private void Start()
     {

@@ -12,20 +12,8 @@ public class Interactor : MonoBehaviour
     public OnGatherableObjectDropped oGatherableObjectDropped;
     #endregion
 
-    #region Variables For Object Holding Type
-    // there Is Two Type Of Object holding
-    public enum ObjectHoldingType 
-    {
-        AlongCamera,            // Holding transform Setted As Child to Camera
-        AlongPlayer             // Holding transform Setted As Child to Player
-    }
-    [SerializeField] private ObjectHoldingType holdingType;
-    [SerializeField] private Transform cameraParentTransform;
-    [SerializeField] private Transform playerParentTransform;
-    #endregion
-
     #region Interaction Variables
-    private new Camera camera;                                     // fps Camera ref 
+    [SerializeField] private Transform cameraTransform;                                     // fps Camera ref 
     [SerializeField] private float interactRange = 2f;         // interation range can be Modify
     [SerializeField] private LayerMask interactLayerMask;      // interaction Layer
     [SerializeField] private Transform grabPoint;              // grabPoint that Can be Use to hold Obj.
@@ -45,28 +33,12 @@ public class Interactor : MonoBehaviour
     #endregion
 
     private IInteractable interactedEnvObject;
-
+    private PlayerIK playerIK;
     private void Awake()
     {
-        camera = GetComponentInChildren<Camera>();
         firstPersonController = GetComponent<FirstPersonController>();   
-        InitializeHoldingType();
+        playerIK = GetComponent<PlayerIK>();
     }
-
-    #region Initializing Holding Type
-    private void InitializeHoldingType()
-    {
-        if(holdingType == ObjectHoldingType.AlongCamera)  // Along With Camera
-        {
-            grabPoint.SetParent(cameraParentTransform,true); // Setting World Pos True Means We Dont Want To Move grab Pos
-        }
-        else // AlongWithPlayer
-        {
-            grabPoint.SetParent(playerParentTransform,true); // Setting World Pos True Means We Dont Want To Move grab Pos
-        }
-    }
-    #endregion
-
     private void Start()
     {
         InputManager.Instance.OnInteractionKeyPerformed += InputManager_Instance_OnInteractionKeyPerformed;  // Subbing On Even
@@ -127,7 +99,7 @@ public class Interactor : MonoBehaviour
 
     private void CastRay() 
     {
-        if (!Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, interactRange, interactLayerMask)) return;
+        if (!Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, interactRange, interactLayerMask)) return;
 
         if(hit.collider != null)
         {
@@ -136,7 +108,9 @@ public class Interactor : MonoBehaviour
                 currentPickedGatherableObject = gatherableObject;
                 gatherableObject.Grab(grabPoint, ResetCameraYPos);
                 Debug.Log(gatherableObject.GetGatherableSO().gatherableObjectName);
+
                 indigatorTextPrompt.text = gatherableObject.GetGatherableSO().gatherableObjectName;
+
                 CanMovePlayer(false);
                 CanMoveCamera(false);
 
@@ -146,7 +120,18 @@ public class Interactor : MonoBehaviour
             }
 
             IInteractable interactable = hit.collider.GetComponentInParent<IInteractable>();
-            interactable?.Interact();
+            if(interactable != null)
+            {
+                if(interactable is Door)
+                {
+                   playerIK.MoveRightHandTo(interactable.GetInteractObjectPos(),() =>
+                   {
+                       interactable?.Interact();   // After Anim Finisthed open door
+                   });
+                   
+                }
+            }
+            
             
         }
 
@@ -155,10 +140,10 @@ public class Interactor : MonoBehaviour
     private void CheckInteractionUpdate()  // This Method Just Shows That Object Details which is Player Looking
     {
         
-        Debug.DrawRay(camera.transform.position, camera.transform.forward * interactRange, Color.green);
+        Debug.DrawRay(cameraTransform.position, cameraTransform.forward * interactRange, Color.green);
         if (HasHoldingObject()) return;
 
-        if (!Physics.Raycast(camera.transform.position, camera.transform.forward, out RaycastHit hit, interactRange, interactLayerMask))
+        if (!Physics.Raycast(cameraTransform.position, cameraTransform.forward, out RaycastHit hit, interactRange, interactLayerMask))
         {
             if (currentInteractingObject != null)
                 currentInteractingObject.SetActiveSelectedVisual(false);   // resetting visuals
@@ -173,7 +158,7 @@ public class Interactor : MonoBehaviour
             return;
         }
         
-        Debug.DrawRay(camera.transform.position, camera.transform.forward * interactRange, Color.red);
+        Debug.DrawRay(cameraTransform.position, cameraTransform.forward * interactRange, Color.red);
 
         if (hit.collider != null)
         {
