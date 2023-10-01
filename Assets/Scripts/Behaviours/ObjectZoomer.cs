@@ -8,12 +8,15 @@ public class ObjectZoomer : MonoBehaviour
 {
     private Camera cameraToZoom;
     [SerializeField] private float zoomSpeed = 0.5f;
+    [SerializeField] private float zoomMouseLerpSpeed = 15;
     [SerializeField] private float minZoom = 0.5f;
     [SerializeField] private float maxZoom = 2f;
 
     private bool canZoomObject;
     private InputManager inputManager;
     private bool isZooming;
+    
+
     private void Awake()
     {
        cameraToZoom = Camera.main;
@@ -68,22 +71,27 @@ public class ObjectZoomer : MonoBehaviour
         else if(inputManager.examineObjectZoomType == InputManager.ExamineObjectZoomType.MouseControl)
         {
             // Old To New Input System
-            float scrollDelta = /*Input.GetAxis("Mouse ScrollWheel");*/ InputManager.Instance.inputActions.Player.ZoomKeysMouse.ReadValue<float>();
+            float scrollDelta = InputManager.Instance.inputActions.Player.ZoomKeysMouse.ReadValue<float>();
             Vector3 zoomDirection = (transform.position - cameraToZoom.transform.position).normalized;
 
             float currentDistance = Vector3.Distance(transform.position, cameraToZoom.transform.position);
             float newDistance = Mathf.Clamp(currentDistance + scrollDelta * zoomSpeed, minZoom, maxZoom);
 
-            transform.position = cameraToZoom.transform.position + zoomDirection * newDistance;
+            // Adjust the zoom speed for lerping
+            float lerpingSpeed = isZooming ? zoomMouseLerpSpeed : 1.0f;
 
-            if(scrollDelta != 0)
-            {
-                isZooming = true;
-            }
-            else
+            // Lerping the camera position
+            transform.position = Vector3.Lerp(transform.position, cameraToZoom.transform.position + zoomDirection * newDistance, Time.deltaTime * lerpingSpeed);
+
+            if (Mathf.Approximately(scrollDelta, 0.0f))
             {
                 isZooming = false;
             }
+            else
+            {
+                isZooming = true;
+            }
+
         }
 
     }

@@ -249,7 +249,7 @@ public class FirstPersonController : MonoBehaviour
     private void Update()
     {
         // Debugging
-        Debug.Log(walkSpeed);
+        //Debug.Log(walkSpeed);
 
 
         #region Camera

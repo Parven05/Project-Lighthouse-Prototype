@@ -68,19 +68,19 @@ public class InventoryUI : MonoBehaviour
         if (isInventoryUiOpened)
         {
             invertoryObjectsUi.gameObject.SetActive(true);
-            Cursor.lockState = CursorLockMode.None;
+            FirstPersonController.SetCurserLockMode(false);
         }
         else
         {
             invertoryObjectsUi.gameObject.SetActive(false);
-            Cursor.lockState = CursorLockMode.Locked;
+            FirstPersonController.SetCurserLockMode(true);
         }
     }
 
     public void DisableAddObjectInventoryBtn()
     {
         addObjectToInventoryBtn.gameObject.SetActive(false);
-        Cursor.lockState = CursorLockMode.Locked;
+        FirstPersonController.SetCurserLockMode(true);
         var fpsControl = FindObjectOfType<FirstPersonController>();
         fpsControl.cameraCanMove = true;
         fpsControl.playerCanMove = true;
@@ -89,7 +89,7 @@ public class InventoryUI : MonoBehaviour
     public void EnableAddObjectInventoryBtn()
     {
         addObjectToInventoryBtn.gameObject.SetActive(true);
-        Cursor.lockState = CursorLockMode.None;
+        FirstPersonController.SetCurserLockMode(false);
     }
 
     private void OnDisable()

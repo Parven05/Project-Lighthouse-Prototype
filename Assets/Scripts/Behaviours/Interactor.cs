@@ -34,6 +34,8 @@ public class Interactor : MonoBehaviour
 
     private IInteractable interactedEnvObject;
     private PlayerIK playerIK;
+    [SerializeField] private LayerMask interestPointLayer;
+    InterestPoint currentInteractedPoint;
     private void Awake()
     {
         firstPersonController = GetComponent<FirstPersonController>();   
@@ -69,6 +71,8 @@ public class Interactor : MonoBehaviour
     private void FixedUpdate()
     {
         CheckInteractionUpdate();
+
+        CheckMouseHovering();
     }
 
     private void InputManager_Instance_OnInteractionKeyPerformed(object sender, EventArgs e)
@@ -176,6 +180,46 @@ public class Interactor : MonoBehaviour
         
       
     }
+
+    private void CheckMouseHovering()
+    {
+        float maxRaycastDistance = 5f;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        Debug.DrawRay(ray.origin, ray.direction * maxRaycastDistance, Color.magenta);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, maxRaycastDistance, interestPointLayer))
+        {
+            Debug.DrawRay(ray.origin, ray.direction * maxRaycastDistance, Color.red);
+            // Handle the hitObject
+            if (hit.collider != null)
+            {
+                if( hit.collider.TryGetComponent(out InterestPoint interestPoint))
+                {
+                    if(currentInteractedPoint == null)
+                    {
+                        currentInteractedPoint = interestPoint;
+                        interestPoint.ShowPointDetails();
+                    }
+                }
+            }
+           
+        }
+        else
+        {
+            if (currentInteractedPoint != null)
+            {
+                currentInteractedPoint.HidePointDetails();
+                currentInteractedPoint = null;
+                // Draw the debug ray in green if no hit
+                Debug.DrawRay(ray.origin, ray.direction * maxRaycastDistance, Color.green);
+            }
+                
+        }
+    }
+
+
+
     // Returns true When currentPickedOnj != null
     public bool HasHoldingObject()
     {

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8907408136737859828}
   - component: {fileID: 3129343101463405195}
   - component: {fileID: 1712101901288405279}
-  m_Layer: 8
+  m_Layer: 10
   m_Name: interest Point
   m_TagString: Untagged
   m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
@@ -69,3 +69,6 @@ MonoBehaviour:
   showDownDialoge: 
   panelTransformPrefab: {fileID: 1842960710406960559, guid: f873a84ee32b9084fa9d88026f0cdd58,
     type: 3}
+  interestPointLayer:
+    serializedVersion: 2
+    m_Bits: 1024
