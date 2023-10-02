@@ -16773,6 +16773,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1602507375}
     m_Modifications:
+    - target: {fileID: 1349177176158543458, guid: d183e658204f076469daf903d997a207,
+        type: 3}
+      propertyPath: orthographic
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1349177176158543458, guid: d183e658204f076469daf903d997a207,
+        type: 3}
+      propertyPath: far clip plane
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1349177176158543458, guid: d183e658204f076469daf903d997a207,
+        type: 3}
+      propertyPath: m_TargetTexture
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1876537790703723760, guid: d183e658204f076469daf903d997a207,
         type: 3}
       propertyPath: m_Name
@@ -16877,6 +16892,11 @@ PrefabInstance:
         type: 3}
       propertyPath: mouseSensitivity
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7320483093682964460, guid: d183e658204f076469daf903d997a207,
+        type: 3}
+      propertyPath: m_Name
+      value: MainCamera
       objectReference: {fileID: 0}
     - target: {fileID: 8285893505913452633, guid: d183e658204f076469daf903d997a207,
         type: 3}
