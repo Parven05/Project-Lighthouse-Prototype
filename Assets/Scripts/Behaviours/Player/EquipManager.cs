@@ -101,7 +101,7 @@ public class EquipManager : MonoBehaviour
 
         GatherableSO[] gatherableSOs = Inventory.Instance.GetGatheredObjectList().ToArray();
         var torch = gatherableSOs.Where(s => s.gatherableObjectName == torchSO.gatherableObjectName).FirstOrDefault(); ;
-        Inventory.Instance.RemoveGatherableObjectFromInventoryList(torch);  // remove key from inventory
+        Inventory.Instance.RemoveObjectFromInventory(torch);  // remove key from inventory
     }
 
     private void OnDisable()

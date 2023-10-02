@@ -811,6 +811,7 @@ GameObject:
   - component: {fileID: 6645763814240216074}
   - component: {fileID: 4377829376168957331}
   - component: {fileID: 8795662552632200577}
+  - component: {fileID: 491237344036324693}
   - component: {fileID: 5208821376115444070}
   - component: {fileID: 6122889098747733290}
   - component: {fileID: 7073273337275313157}
@@ -818,7 +819,6 @@ GameObject:
   - component: {fileID: 4894502830222963032}
   - component: {fileID: 5413283364049450360}
   - component: {fileID: 5465332753157285052}
-  - component: {fileID: 491237344036324693}
   - component: {fileID: 8285893505913452633}
   - component: {fileID: 3873036199649343912}
   m_Layer: 6
@@ -897,6 +897,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &491237344036324693
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1876537790703723760}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0de0aa9f377666746a768c9714c401e7, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!136 &5208821376115444070
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -979,7 +1000,6 @@ MonoBehaviour:
   maxVelocityChange: 10
   enableSprint: 1
   unlimitedSprint: 1
-  sprintKey: 304
   sprintSpeed: 7
   sprintDuration: 5
   sprintCooldown: 0.5
@@ -992,7 +1012,6 @@ MonoBehaviour:
   sprintBarWidthPercent: 0.3
   sprintBarHeightPercent: 0.02
   enableJump: 1
-  jumpKey: 32
   jumpPower: 5
   enableCrouch: 1
   holdToCrouch: 1
@@ -1020,9 +1039,6 @@ MonoBehaviour:
   interactLayerMask:
     serializedVersion: 2
     m_Bits: 256
-  grabPoint: {fileID: 8714326210180364669}
-  grabPointZOffset: 0.8
-  indigatorTextPrompt: {fileID: 0}
 --- !u!114 &4894502830222963032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1066,27 +1082,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthRefillSpeed: 0.5
   healType: 2
---- !u!95 &491237344036324693
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1876537790703723760}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 0de0aa9f377666746a768c9714c401e7, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &8285893505913452633
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1119,14 +1114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rightHandTargetIK: {fileID: 3713224496513918511}
   leftHandTargetIK: {fileID: 0}
-  rightHandFingersIKs:
-  - {fileID: 6687427645993532402}
-  - {fileID: 4427336253759656081}
-  - {fileID: 1777127020470964939}
-  - {fileID: 5681608694058002319}
-  - {fileID: 4242276244574932114}
   rightHandRigLayer: {fileID: 3153087141055437666}
-  rightFingerRigLayer: {fileID: 8206898512455233323}
   lerpSpeed: 3
 --- !u!1 &1951040665978780802
 GameObject:

@@ -7,9 +7,8 @@ using UnityEngine.UI;
 public class InventoryUI : MonoBehaviour
 {
     public static InventoryUI Instance;
-    public event EventHandler OnAddObjectToInventoryBtnClicked;
 
-    [SerializeField] private Button addObjectToInventoryBtn;
+    [SerializeField] private Button inventoryBtn,exitBtn;
     [SerializeField] private Transform invertoryObjectsUi;
     [SerializeField] private Transform inventoryIconTemplatePrefab;
     [SerializeField] private Transform iconHolderContainerRect;
@@ -19,16 +18,22 @@ public class InventoryUI : MonoBehaviour
     {
         Instance = this;
 
-        addObjectToInventoryBtn.onClick.AddListener(() =>
+        inventoryBtn.onClick.AddListener(() =>
         {
-            OnAddObjectToInventoryBtnClicked?.Invoke(this, EventArgs.Empty);
+            ToggleInventoryUI();
+        });
+
+        exitBtn.onClick.AddListener(() =>
+        {
+            ToggleInventoryUI();
         });
 
         invertoryObjectsUi.gameObject.SetActive(false);
     }
     private void Start()
     {
-        DisableAddObjectInventoryBtn();
+        //DisableAddObjectInventoryBtn();
+        DestroyOldTemplates();
 
         InputManager.Instance.OnInventoyKeyPerformed += InputManager_Instance_OnInventoyKeyPerformed;
         Inventory.Instance.OnGatherableObjectModifiedInInventory += UpdateUiIconTemplates;
@@ -68,33 +73,36 @@ public class InventoryUI : MonoBehaviour
         if (isInventoryUiOpened)
         {
             invertoryObjectsUi.gameObject.SetActive(true);
+            inventoryBtn.gameObject.SetActive(false);
             FirstPersonController.SetCurserLockMode(false);
         }
         else
         {
             invertoryObjectsUi.gameObject.SetActive(false);
+            inventoryBtn.gameObject.SetActive(true);
             FirstPersonController.SetCurserLockMode(true);
         }
     }
 
-    public void DisableAddObjectInventoryBtn()
-    {
-        addObjectToInventoryBtn.gameObject.SetActive(false);
-        FirstPersonController.SetCurserLockMode(true);
-        var fpsControl = FindObjectOfType<FirstPersonController>();
-        fpsControl.cameraCanMove = true;
-        fpsControl.playerCanMove = true;
-    }
+    //public void DisableAddObjectInventoryBtn()
+    //{
+    //    inventoryBtn.gameObject.SetActive(false);
+    //    FirstPersonController.SetCurserLockMode(true);
+    //    var fpsControl = FindObjectOfType<FirstPersonController>();
+    //    fpsControl.cameraCanMove = true;
+    //    fpsControl.playerCanMove = true;
+    //}
 
-    public void EnableAddObjectInventoryBtn()
-    {
-        addObjectToInventoryBtn.gameObject.SetActive(true);
-        FirstPersonController.SetCurserLockMode(false);
-    }
+    //public void EnableAddObjectInventoryBtn()
+    //{
+    //    inventoryBtn.gameObject.SetActive(true);
+    //    FirstPersonController.SetCurserLockMode(false);
+    //}
 
     private void OnDisable()
     {
-        addObjectToInventoryBtn.onClick.RemoveAllListeners();
+        inventoryBtn.onClick.RemoveAllListeners();
+        exitBtn.onClick.RemoveAllListeners();
         InputManager.Instance.OnInventoyKeyPerformed -= InputManager_Instance_OnInventoyKeyPerformed;
     }
 }

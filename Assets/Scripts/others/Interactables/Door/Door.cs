@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 
-public class Door : MonoBehaviour, IInteractable
+public class Door : MonoBehaviour
 {
     [SerializeField] private GatherableSO validKeySO;
     [SerializeField] private Transform doorHinge;
@@ -44,8 +44,6 @@ public class Door : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-       //var fpsControl = FindObjectOfType<FirstPersonController>();
-       //fpsControl.cameraCanMove = false;
        DoorToggle();  
     }
 
@@ -129,31 +127,37 @@ public class Door : MonoBehaviour, IInteractable
     {
         if (canTrapVictim && victimTransform != null)
         {
-            // Calculate Distanec
-            float distanceToVictim = Vector3.Distance(transform.position, victimTransform.position);  
-            // Calculate the direction from the door to the victim
-            Vector3 doorToVictimDirection = victimTransform.position - transform.position;
+            DoTrapPlayer();
+        }
+            
+    }
 
-            // Calculate the direction from the door to the center of the door frame
-            Vector3 doorToFrameCenterDirection = doorFrameCenter.position - transform.position;
+    private void DoTrapPlayer()
+    {
+        // Calculate Distanec
+        float distanceToVictim = Vector3.Distance(transform.position, victimTransform.position);
+        // Calculate the direction from the door to the victim
+        Vector3 doorToVictimDirection = victimTransform.position - transform.position;
 
-            // Normalize both directions for the dot product
-            doorToVictimDirection.Normalize();
-            doorToFrameCenterDirection.Normalize();
+        // Calculate the direction from the door to the center of the door frame
+        Vector3 doorToFrameCenterDirection = doorFrameCenter.position - transform.position;
 
-            // Calculate the dot product between the two directions
-            float dotProduct = Vector3.Dot(doorToVictimDirection, doorToFrameCenterDirection);
-            //Debug.Log("Dot Product Difference" +" " + dotProduct);
-            //Debug.Log("Distance Difference" + " " + distanceToVictim);
-            // Check if the dot product is Greater than your threshold
-            if (dotProduct > dotProductThreshold && distanceToVictim > doorCloseDistance)
-            {
-                Debug.Log("Victim Crossed Door");
-                canTrapVictim = false;
-                isVictimTrapped = true;
-                CloseDoor();
-                // Perform your door-closing action here
-            }
+        // Normalize both directions for the dot product
+        doorToVictimDirection.Normalize();
+        doorToFrameCenterDirection.Normalize();
+
+        // Calculate the dot product between the two directions
+        float dotProduct = Vector3.Dot(doorToVictimDirection, doorToFrameCenterDirection);
+        //Debug.Log("Dot Product Difference" +" " + dotProduct);
+        //Debug.Log("Distance Difference" + " " + distanceToVictim);
+        // Check if the dot product is Greater than your threshold
+        if (dotProduct > dotProductThreshold && distanceToVictim > doorCloseDistance)
+        {
+            Debug.Log("Victim Crossed Door");
+            canTrapVictim = false;
+            isVictimTrapped = true;
+            CloseDoor();
+            // Perform your door-closing action here
         }
     }
 
@@ -188,7 +192,7 @@ public class Door : MonoBehaviour, IInteractable
     {
         GatherableSO[] gatherableSOs = Inventory.Instance.GetGatheredObjectList().ToArray();
         var key = gatherableSOs.Where(s => s.gatherableObjectName == validKeySO.gatherableObjectName).FirstOrDefault(); ;
-        Inventory.Instance.RemoveGatherableObjectFromInventoryList(key);  // remove key from inventory
+        Inventory.Instance.RemoveObjectFromInventory(key);  // remove key from inventory
     }
 
     public void SetActiveSelectedVisual(bool activeStatus)
@@ -198,11 +202,6 @@ public class Door : MonoBehaviour, IInteractable
         {
             outline.enabled = activeStatus;
         }
-    }
-
-    public Transform GetInteractObjectPos()
-    {
-        return handTargetPos;
     }
 
 }

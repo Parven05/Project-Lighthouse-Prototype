@@ -9,11 +9,25 @@ public class InventoryIconTemplate : MonoBehaviour
 {
     public static Action<GatherableSO> OnAnyObjectUsedAndRemoved;
 
+    [SerializeField] private Button useBtn, removeBtn;
     [SerializeField] private TextMeshProUGUI itemQuantitytext;
     private string itemName;
     [SerializeField] private Image itemIconImage;
 
     private GatherableSO gatherableSO;
+    private void Awake()
+    {
+        useBtn.onClick.AddListener(() =>
+        {
+            UseItem();
+        });
+
+        removeBtn.onClick.AddListener(() =>
+        {
+            Inventory.Instance.RemoveObjectFromInventory(gatherableSO);
+            Destroy(this.gameObject);
+        });
+    }
 
 
     public void SetUpItemTemplatePropsUI(GatherableSO gatherableSO,int itemQuantity)
@@ -75,5 +89,11 @@ public class InventoryIconTemplate : MonoBehaviour
         // Return true to indicate that the item was successfully used
         return true;
     }
+
+    //private void OnDisable()
+    //{
+    //    useBtn.onClick.RemoveAllListeners();
+    //    removeBtn.onClick.RemoveAllListeners();
+    //}
 
 }

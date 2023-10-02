@@ -21,44 +21,55 @@ public class Inventory : MonoBehaviour
     }
     private void Start()
     {
-        playerInteractor.onGatherableObjectPicked += ShowPickUpDropUI;
-        playerInteractor.oGatherableObjectDropped += ClosePickUpDropUI;
+        //playerInteractor.onGatherableObjectPicked += ShowPickUpDropUI;
+        //playerInteractor.oGatherableObjectDropped += ClosePickUpDropUI;
 
-        InventoryUI.Instance.OnAddObjectToInventoryBtnClicked += AddGatherableObjectToInventory;
-        InventoryIconTemplate.OnAnyObjectUsedAndRemoved += RemoveGatherableObjectFromInventoryList;
+        //InventoryUI.Instance.OnAddObjectToInventoryBtnClicked += AddGatherableObjectToInventory;
+        InventoryIconTemplate.OnAnyObjectUsedAndRemoved += RemoveObjectFromInventory;
     }
 
-    public void RemoveGatherableObjectFromInventoryList(GatherableSO gatherableSO)
+    public void RemoveObjectFromInventory(GatherableSO gatherableSO)
     {
        gatheredSoList.Remove(gatherableSO);
        OnGatherableObjectModifiedInInventory?.Invoke(gatheredSoList);
     }
 
-    private void AddGatherableObjectToInventory(object sender, EventArgs e)
+    public void AddObjectToInventory(GatherableObject gatherableObject)
+    {
+        gatheredSoList.Add(gatherableObject.GetGatherableSO());
+
+        // Call Ui For Update Icons
+        OnGatherableObjectModifiedInInventory?.Invoke(gatheredSoList);
+
+        // Destroy That Gathered Object
+        Destroy(gatherableObject.gameObject);
+    }
+
+    public void AddGatherableObjectToInventory(object sender, EventArgs e)
     {
        gatheredSoList.Add(playerSelectedGatherableObject.GetGatherableSO());
 
        OnGatherableObjectModifiedInInventory?.Invoke(gatheredSoList);
 
-       ClosePickUpDropUI();
-       Destroy(playerSelectedGatherableObject.gameObject);
+       //ClosePickUpDropUI();
+       //Destroy(playerSelectedGatherableObject.gameObject);
     }
 
-    private void ShowPickUpDropUI(GatherableObject gatherableObject)
-    {
-        SetCurrentHoldingObject(gatherableObject);
-        InventoryUI.Instance.EnableAddObjectInventoryBtn();
-    }
+    //private void ShowPickUpDropUI(GatherableObject gatherableObject)
+    //{
+    //    SetCurrentHoldingObject(gatherableObject);
+    //    InventoryUI.Instance.EnableAddObjectInventoryBtn();
+    //}
 
-    private void SetCurrentHoldingObject(GatherableObject gatherableObject)
-    {
-        this.playerSelectedGatherableObject = gatherableObject;
-    }
+    //private void SetCurrentHoldingObject(GatherableObject gatherableObject)
+    //{
+    //    this.playerSelectedGatherableObject = gatherableObject;
+    //}
 
-    private void ClosePickUpDropUI()
-    {
-        InventoryUI.Instance.DisableAddObjectInventoryBtn();
-    }
+    //private void ClosePickUpDropUI()
+    //{
+    //    InventoryUI.Instance.DisableAddObjectInventoryBtn();
+    //}
 
     public List<GatherableSO> GetGatheredObjectList()
     {
@@ -71,7 +82,7 @@ public class Inventory : MonoBehaviour
         {
             var batterySo = gatheredSoList.Where(s => s == gatherableSOInput).FirstOrDefault(); // Get That Founded
             batterySO = batterySo;  // Pass Through Parameter
-            RemoveGatherableObjectFromInventoryList(batterySo);
+            RemoveObjectFromInventory(batterySo);
             return true;
         }
         else
@@ -83,15 +94,12 @@ public class Inventory : MonoBehaviour
 
     private void OnDisable()
     {
-        playerInteractor.onGatherableObjectPicked -= ShowPickUpDropUI;
-        playerInteractor.oGatherableObjectDropped -= ClosePickUpDropUI;
+        //playerInteractor.onGatherableObjectPicked -= ShowPickUpDropUI;
+        //playerInteractor.oGatherableObjectDropped -= ClosePickUpDropUI;
 
-        InventoryUI.Instance.OnAddObjectToInventoryBtnClicked -= AddGatherableObjectToInventory;
-        InventoryIconTemplate.OnAnyObjectUsedAndRemoved -= RemoveGatherableObjectFromInventoryList;
+        //InventoryUI.Instance.OnAddObjectToInventoryBtnClicked -= AddGatherableObjectToInventory;
+        InventoryIconTemplate.OnAnyObjectUsedAndRemoved -= RemoveObjectFromInventory;
     }
 
-    public GatherableObjectType GetObjectCatagory(GatherableSO gatherableSO)
-    {
-       return gatherableSO.gatherableType;
-    }
+
 }
