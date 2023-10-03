@@ -8,6 +8,7 @@ public class PlayerFearSystem : MonoBehaviour
     [SerializeField] private float healthRefillSpeed = 0.5f;
     private HealthSystem healthSystem;
     private bool canHealHealth;
+    private bool isHealing = false;
 
     public enum HealType
     {
@@ -21,9 +22,19 @@ public class PlayerFearSystem : MonoBehaviour
         healthSystem = GetComponent<HealthSystem>();
     }
 
+    private void Start()
+    {
+        Healer.OnHealingStarted += Healer_OnHealingStarted;
+    }
+
+    private void Healer_OnHealingStarted(object sender, System.EventArgs e)
+    {
+        isHealing = true;
+    }
+
     public void IncreaseFearLevel(float level)
     {
-        if (healthSystem != null)
+        if (healthSystem != null && !isHealing)
         {
             healthSystem.DecreaseHealth(level);
         }
@@ -41,10 +52,12 @@ public class PlayerFearSystem : MonoBehaviour
             if(healType == HealType.AutoHeal || healType == HealType.Both)
             {
                 HealHealth();
+                isHealing = false;   // While Healing Dont Fear
             }
             else if(healType == HealType.ManualByInhaler)
             {
                 // HAndles by Others
+                isHealing = false;   // While Healing Dont Fear
             }
            
         }
@@ -58,5 +71,11 @@ public class PlayerFearSystem : MonoBehaviour
         clampedHealth = Mathf.Clamp(clampedHealth, 0, healthSystem.GetMaxHealth());
 
         healthSystem.SetHealth(clampedHealth); // Update the health
+    }
+
+
+    private void OnDisable()
+    {
+        Healer.OnHealingStarted -= Healer_OnHealingStarted;
     }
 }

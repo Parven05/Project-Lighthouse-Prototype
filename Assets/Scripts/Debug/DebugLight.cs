@@ -19,12 +19,15 @@ public class DebugLight : MonoBehaviour
         StartCoroutine(ToggleLight());
         lightRotateAnim1 = lightRotate1.GetComponent<Animator>();
         lightRotateAnim2 = lightRotate2.GetComponent<Animator>();
+
+        lightRotateAnim1.SetBool("isPlay", true);
+        lightRotateAnim2.SetBool("isPlay", true);
     }
 
     private void Update()
     {
-        lightRotateAnim1.SetBool("isPlay",true);
-        lightRotateAnim2.SetBool("isPlay", true);
+        //lightRotateAnim1.SetBool("isPlay",true);
+        //lightRotateAnim2.SetBool("isPlay", true); // Just loop By Clip Loop
     }
     
     private IEnumerator ToggleLight()
