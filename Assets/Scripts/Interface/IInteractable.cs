@@ -6,4 +6,7 @@ public interface IInteractable
 {
     void Interact();
 
+    Transform GetHandTargetTransform();
+
+    Transform[] GetHandFingersTargetTransforms();
 }

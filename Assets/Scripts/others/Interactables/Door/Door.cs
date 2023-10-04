@@ -204,4 +204,9 @@ public class Door : MonoBehaviour
         }
     }
 
+    public Transform GetHandTargetTransform()
+    {
+        return handTargetPos;
+    }
+
 }

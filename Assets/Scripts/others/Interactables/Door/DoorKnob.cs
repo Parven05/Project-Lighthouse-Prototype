@@ -14,4 +14,14 @@ public class DoorKnob : MonoBehaviour, IInteractable
     {
         door.Interact();
     }
+
+    public Transform GetHandTargetTransform()
+    {
+       return door.GetHandTargetTransform();
+    }
+
+    public Transform[] GetHandFingersTargetTransforms()
+    {
+        return null;
+    }
 }

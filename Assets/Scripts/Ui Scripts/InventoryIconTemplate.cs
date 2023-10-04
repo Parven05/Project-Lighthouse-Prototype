@@ -27,8 +27,21 @@ public class InventoryIconTemplate : MonoBehaviour
             Inventory.Instance.RemoveObjectFromInventory(gatherableSO);
             Destroy(this.gameObject);
         });
+
     }
 
+    private void CheckObjectStoringType()
+    {
+        if(gatherableSO.storingType == StoringType.Removable)  // Dont Remove, RemoveIcon Btn.
+        {
+
+        }
+        else if(gatherableSO.storingType == StoringType.NonRemovable) // remove Remove Item Btn.
+        {
+            removeBtn.gameObject.SetActive(false);
+            useBtn.gameObject.SetActive(false);
+        }
+    }
 
     public void SetUpItemTemplatePropsUI(GatherableSO gatherableSO,int itemQuantity)
     {
@@ -45,6 +58,7 @@ public class InventoryIconTemplate : MonoBehaviour
             itemQuantitytext.gameObject.SetActive(false);
         }
 
+        CheckObjectStoringType();
     }
 
     public void UseItem()

@@ -8,8 +8,9 @@ public class GatherableSO : ScriptableObject
     public Sprite gatherableImageSprite;          // To Show In Ui Elements.
     public string gatherableObjectName;           // Compare The obj With Name.
     public GatherableObjectType gatherableType;   // Type that you Can Save Some Time.
+    public StoringType storingType;               // Store type That Detemines whether it Removable Or Not
     public float value;                           // like Health,And Battery Power Only For Usable
-    public bool countable;
+    [HideInInspector] public float quantity = 0;  // variable only Applicable For Healable And Usable
 }
 public enum GatherableObjectType  // This Enum Catagarising Objects.
 {
@@ -17,4 +18,10 @@ public enum GatherableObjectType  // This Enum Catagarising Objects.
     Collectable,  // Like Keys 
     Equipable,    // Like Guns Or Simple Weopons like Knife torch
     Usable        // Like Torch battery
+}
+
+public enum StoringType // this enum Determines is Storable Or Not
+{
+    Removable,
+    NonRemovable
 }

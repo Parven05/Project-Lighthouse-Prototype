@@ -15,6 +15,7 @@ public class GatherableObjectSOEditor : Editor
         EditorGUILayout.PropertyField(serializedObject.FindProperty("gatherableImageSprite"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("gatherableObjectName"));
         EditorGUILayout.PropertyField(serializedObject.FindProperty("gatherableType"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("storingType"));
 
         // Check if the GatherableObjectType is Usable
         if (gatherableSO.gatherableType == GatherableObjectType.Usable || gatherableSO.gatherableType == GatherableObjectType.Healable)

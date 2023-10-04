@@ -36,6 +36,12 @@ public class PlayerIK : MonoBehaviour
 
     public void MoveRightHandTo(Transform target,Action OnHandReachedTargetSuccess)
     {
+        if (target == null)
+        {
+            OnHandReachedTargetSuccess?.Invoke(); // null means its Was Gatherable Object
+            return;
+        }
+
         // Assign Hand Target Refs
         this.rightHandTargetIK.position = target.position;
         handTargetPos = target;
@@ -56,7 +62,7 @@ public class PlayerIK : MonoBehaviour
             rightHandRigLayer.weight = Mathf.MoveTowards(rightHandRigLayer.weight, 1f, lerpSpeed * Time.deltaTime);
             if (rightHandRigLayer.weight == 1 )
             {
-                animator.SetTrigger("Grab");
+                //animator.SetTrigger("Grab");
                 Debug.Log("twist Animation place Here");
                 handTargetPos.DORotate(new Vector3(60, 0, 0), 0.3f).OnComplete(() =>
                 {

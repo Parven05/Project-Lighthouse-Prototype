@@ -7,7 +7,6 @@ public class PlayerFearSystem : MonoBehaviour
 {
     [SerializeField] private float healthRefillSpeed = 0.5f;
     private HealthSystem healthSystem;
-    private bool canHealHealth;
     private bool isHealing = false;
 
     public enum HealType
@@ -22,16 +21,6 @@ public class PlayerFearSystem : MonoBehaviour
         healthSystem = GetComponent<HealthSystem>();
     }
 
-    private void Start()
-    {
-        Healer.OnHealingStarted += Healer_OnHealingStarted;
-    }
-
-    private void Healer_OnHealingStarted(object sender, System.EventArgs e)
-    {
-        isHealing = true;
-    }
-
     public void IncreaseFearLevel(float level)
     {
         if (healthSystem != null && !isHealing)
@@ -40,42 +29,44 @@ public class PlayerFearSystem : MonoBehaviour
         }
     }
 
-    public void NormalizeFearLevel()
+    public void SetIsHealing(bool isHealing)
     {
-        canHealHealth = true;
+        this.isHealing = isHealing;   // Can Now Start Recovering Health
     }
 
     private void Update()
     {
-        if (canHealHealth)
+        if (isHealing)
         {
             if(healType == HealType.AutoHeal || healType == HealType.Both)
             {
                 HealHealth();
-                isHealing = false;   // While Healing Dont Fear
             }
             else if(healType == HealType.ManualByInhaler)
             {
                 // HAndles by Others
-                isHealing = false;   // While Healing Dont Fear
             }
-           
+            
         }
+       
     }
 
     private void HealHealth()
     {
-        float clampedHealth = healthSystem.GetHealth(); // Initialize with the current health
+        float playerHealth = healthSystem.GetHealth(); // Initialize with the current health
 
-        clampedHealth += Time.deltaTime * healthRefillSpeed;
-        clampedHealth = Mathf.Clamp(clampedHealth, 0, healthSystem.GetMaxHealth());
+        playerHealth += Time.deltaTime * healthRefillSpeed;
 
-        healthSystem.SetHealth(clampedHealth); // Update the health
+        if(playerHealth >= healthSystem.GetMaxHealth())
+        {
+            playerHealth = healthSystem.GetMaxHealth();  // Dont Allow To OverFlow Health
+            isHealing = false;                           // Stop Healing
+        }
+
+        //playerHealth = Mathf.Clamp(playerHealth, 0, healthSystem.GetMaxHealth());
+
+        healthSystem.SetHealth(playerHealth); // Update the health
     }
 
 
-    private void OnDisable()
-    {
-        Healer.OnHealingStarted -= Healer_OnHealingStarted;
-    }
 }

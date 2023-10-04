@@ -9,9 +9,6 @@ public class Inventory : MonoBehaviour
     public Action<List<GatherableSO>> OnGatherableObjectModifiedInInventory;  //When Object Added or Removed
 
     private List<GatherableSO> gatheredSoList;               // List For The Inventory Gatherables So Datas
-    private GatherableObject playerSelectedGatherableObject;
-
-    [SerializeField] private Interactor playerInteractor;
 
     private void Awake()
     {
@@ -21,10 +18,6 @@ public class Inventory : MonoBehaviour
     }
     private void Start()
     {
-        //playerInteractor.onGatherableObjectPicked += ShowPickUpDropUI;
-        //playerInteractor.oGatherableObjectDropped += ClosePickUpDropUI;
-
-        //InventoryUI.Instance.OnAddObjectToInventoryBtnClicked += AddGatherableObjectToInventory;
         InventoryIconTemplate.OnAnyObjectUsedAndRemoved += RemoveObjectFromInventory;
     }
 
@@ -44,32 +37,6 @@ public class Inventory : MonoBehaviour
         // Destroy That Gathered Object
         Destroy(gatherableObject.gameObject);
     }
-
-    public void AddGatherableObjectToInventory(object sender, EventArgs e)
-    {
-       gatheredSoList.Add(playerSelectedGatherableObject.GetGatherableSO());
-
-       OnGatherableObjectModifiedInInventory?.Invoke(gatheredSoList);
-
-       //ClosePickUpDropUI();
-       //Destroy(playerSelectedGatherableObject.gameObject);
-    }
-
-    //private void ShowPickUpDropUI(GatherableObject gatherableObject)
-    //{
-    //    SetCurrentHoldingObject(gatherableObject);
-    //    InventoryUI.Instance.EnableAddObjectInventoryBtn();
-    //}
-
-    //private void SetCurrentHoldingObject(GatherableObject gatherableObject)
-    //{
-    //    this.playerSelectedGatherableObject = gatherableObject;
-    //}
-
-    //private void ClosePickUpDropUI()
-    //{
-    //    InventoryUI.Instance.DisableAddObjectInventoryBtn();
-    //}
 
     public List<GatherableSO> GetGatheredObjectList()
     {
@@ -94,10 +61,6 @@ public class Inventory : MonoBehaviour
 
     private void OnDisable()
     {
-        //playerInteractor.onGatherableObjectPicked -= ShowPickUpDropUI;
-        //playerInteractor.oGatherableObjectDropped -= ClosePickUpDropUI;
-
-        //InventoryUI.Instance.OnAddObjectToInventoryBtnClicked -= AddGatherableObjectToInventory;
         InventoryIconTemplate.OnAnyObjectUsedAndRemoved -= RemoveObjectFromInventory;
     }
 

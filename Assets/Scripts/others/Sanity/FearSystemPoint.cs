@@ -27,7 +27,6 @@ public class FearSystemPoint : MonoBehaviour
         if (other.TryGetComponent(out PlayerFearSystem playerFearSystem))
         {
             Debug.Log("Player Exited");
-            playerFearSystem.NormalizeFearLevel();
             targetvictimTranform = null;
             playerFearSystem = null;
         }

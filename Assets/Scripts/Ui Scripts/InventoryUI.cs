@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,6 +44,8 @@ public class InventoryUI : MonoBehaviour
     {
         DestroyOldTemplates();
 
+        //List<GatherableSO> mergedObjectSOlist = CheckDuplicates(gatheredObjSOlist);
+
         for (int i = 0; i < gatheredObjSOlist.Count; i++)
         {
             var iconTemplate = Instantiate(inventoryIconTemplatePrefab, iconHolderContainerRect);
@@ -52,6 +55,21 @@ public class InventoryUI : MonoBehaviour
             }
         }
     }
+
+    //private List<GatherableSO> CheckDuplicates(List<GatherableSO> gatheredObjSOlist)
+    //{
+
+    //    var mergedList = gatheredObjSOlist
+    //    .GroupBy(item => item.gatherableObjectName) // Group items by their unique identifier (e.g., name)
+    //    .Select(group => new GatherableSO
+    //    {
+    //        gatherableObjectName = group.Key, // Key is the unique identifier
+    //        value = group.Sum(item => item.value) // Sum the values of duplicates
+    //    })
+    //    .ToList();
+
+    //    return mergedList;
+    //}
 
     private void DestroyOldTemplates()
     {

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class Healer : MonoBehaviour
 {
-    public static event EventHandler OnHealingStarted;
     private bool canHeal = false;
     public void ActivateHealing()
     {
@@ -22,9 +21,7 @@ public class Healer : MonoBehaviour
         if (other.TryGetComponent(out PlayerFearSystem playerFearSystem))
         {
             Debug.Log("Player Entered Heal Point");
-            playerFearSystem.NormalizeFearLevel();
-
-            OnHealingStarted?.Invoke(this,EventArgs.Empty);
+            playerFearSystem.SetIsHealing(true);
         }
     }
     private void OnTriggerExit(Collider other)
@@ -32,6 +29,7 @@ public class Healer : MonoBehaviour
         if (other.TryGetComponent(out PlayerFearSystem playerFearSystem))
         {
             Debug.Log("Player Exited Heal Point");
+            playerFearSystem.SetIsHealing(false);
         }
     }
 }

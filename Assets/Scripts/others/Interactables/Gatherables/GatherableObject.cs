@@ -35,5 +35,13 @@ public class GatherableObject : MonoBehaviour,IInteractable
         }
     }
 
-  
+    public Transform GetHandTargetTransform()
+    {
+        return null;
+    }
+
+    public Transform[] GetHandFingersTargetTransforms()
+    {
+        return null;
+    }
 }

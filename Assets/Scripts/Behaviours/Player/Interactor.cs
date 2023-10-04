@@ -11,6 +11,10 @@ public class Interactor : MonoBehaviour
     [SerializeField] private LayerMask interactLayerMask;      // interaction Layer
     #endregion
 
+    // ik Session
+    [SerializeField] private PlayerIK playerIK;
+
+
     private void Start()
     {
         InputManager.Instance.inputActions.Player.InteractionKey.performed += InteractionKey_performed;
@@ -29,8 +33,12 @@ public class Interactor : MonoBehaviour
         if(hit.collider != null)
         {
             if(hit.collider.TryGetComponent(out IInteractable interactable))
-            {   
-               interactable.Interact();   // interact through interface
+            {
+                playerIK.MoveRightHandTo(interactable.GetHandTargetTransform(), () =>
+                {
+                    interactable.Interact();   // interact through interface
+                });
+              
             }
         }
 
