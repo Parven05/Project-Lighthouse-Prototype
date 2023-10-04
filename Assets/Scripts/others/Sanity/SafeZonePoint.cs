@@ -12,7 +12,7 @@ public class SafeZonePoint : MonoBehaviour
         DownToUpFaced
     }
 
-    [SerializeField] private LightType lightType;
+    [SerializeField] private LightType lightType = LightType.UpToDownFaced;
     [SerializeField] private LayerMask floorLayer;
     [SerializeField] private bool showGizMos= true;
 
