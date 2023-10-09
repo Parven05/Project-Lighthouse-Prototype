@@ -5,7 +5,7 @@ public class Restart : MonoBehaviour
 {
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.X))
         {
             SceneManager.LoadScene("Prototype");
         }

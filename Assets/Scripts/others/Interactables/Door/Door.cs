@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
+    public static event EventHandler OnAnyDoorKnobAnimFinished;
+
     [SerializeField] private GatherableSO validKeySO;
     [SerializeField] private Transform doorHinge;
     [SerializeField] private Transform doorKnob;
@@ -170,7 +172,10 @@ public class Door : MonoBehaviour
     {
         doorKnob.DOLocalRotate(new Vector3(0, 0, targetKnobAngle), knobRotateDuration).SetEase(Ease.InOutSine).OnComplete(() =>
         {
-            doorKnob.DOLocalRotate(new Vector3(0, 0, 0), knobRotateDuration);
+            doorKnob.DOLocalRotate(new Vector3(0, 0, 0), knobRotateDuration).OnComplete(() =>
+            {
+                OnAnyDoorKnobAnimFinished?.Invoke(this, EventArgs.Empty);
+            });
         });
     }
 

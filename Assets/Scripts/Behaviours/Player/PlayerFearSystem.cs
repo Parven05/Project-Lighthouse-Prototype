@@ -6,9 +6,12 @@ using UnityEngine;
 public class PlayerFearSystem : MonoBehaviour
 {
     [SerializeField] private float healthRefillSpeed = 0.5f;
-    private HealthSystem healthSystem;
-    private bool isHealing = false;
+    private HealthSystem playerHealthSystem;
 
+    private Torch playerTorch;
+    private bool isUsingTorch = false;
+
+    private bool isHealing = false;
     public enum HealType
     {
         AutoHeal,
@@ -18,14 +21,18 @@ public class PlayerFearSystem : MonoBehaviour
     [SerializeField] private HealType healType = HealType.Both; // By Default Both
     private void Awake()
     {
-        healthSystem = GetComponent<HealthSystem>();
+        playerHealthSystem = GetComponent<HealthSystem>();
+        playerTorch = FindObjectOfType<Torch>();   
+       
     }
 
     public void IncreaseFearLevel(float level)
     {
-        if (healthSystem != null && !isHealing)
+        if (playerHealthSystem == null) return;
+
+        if (!isHealing && !isUsingTorch)
         {
-            healthSystem.DecreaseHealth(level);
+            playerHealthSystem.DecreaseHealth(level);
         }
     }
 
@@ -36,7 +43,9 @@ public class PlayerFearSystem : MonoBehaviour
 
     private void Update()
     {
-        if (isHealing)
+        isUsingTorch = playerTorch.IsActive();
+
+        if (isHealing || isUsingTorch)
         {
             if(healType == HealType.AutoHeal || healType == HealType.Both)
             {
@@ -48,25 +57,23 @@ public class PlayerFearSystem : MonoBehaviour
             }
             
         }
+
        
     }
 
     private void HealHealth()
     {
-        float playerHealth = healthSystem.GetHealth(); // Initialize with the current health
+        float playerHealth = playerHealthSystem.GetHealth(); // Initialize with the current health
 
         playerHealth += Time.deltaTime * healthRefillSpeed;
 
-        if(playerHealth >= healthSystem.GetMaxHealth())
+        if(playerHealth > playerHealthSystem.GetMaxHealth())
         {
-            playerHealth = healthSystem.GetMaxHealth();  // Dont Allow To OverFlow Health
             isHealing = false;                           // Stop Healing
         }
 
-        //playerHealth = Mathf.Clamp(playerHealth, 0, healthSystem.GetMaxHealth());
-
-        healthSystem.SetHealth(playerHealth); // Update the health
+        playerHealthSystem.SetHealth(playerHealth); // Update the health
     }
 
-
+   
 }
