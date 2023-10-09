@@ -11,6 +11,9 @@ public class Torch : MonoBehaviour
 
     [SerializeField] private GatherableSO batterySO;   // Ref to the BatterySo 
     [SerializeField] private Light torchFlash;         // Ref to the BatterySo 
+
+    [SerializeField] private Transform handTargetIkTransform;         // Hand TArget ik Pos
+
     private GatherableSO currentUsingBatterySO;
     [SerializeField] private float currentBatteryHealth = 0;
     public bool canUseTorch = false;
@@ -62,12 +65,12 @@ public class Torch : MonoBehaviour
 
         if(canUseTorch)
         {
-            Debug.Log("Light working");
+            // Light Working
             SetActiveFlash(true);
         }
         else
         {
-            Debug.Log("Light battery dead");
+            // Battery Dead
             SetActiveFlash(false);
         }
     }
@@ -98,10 +101,20 @@ public class Torch : MonoBehaviour
     {
         return batterySO.value;
     }
+
+    public bool IsActive()
+    {
+        return gameObject.activeInHierarchy && canUseTorch;
+    }
     private void OnDisable()
     {
         //InputManager.Instance.OnReloadKeyPerformed -= InputManager_Instance_OnReloadKeyPerformed;
 
         OnTorchUnEquiped?.Invoke(this, EventArgs.Empty);
+    }
+
+    internal Transform GetHandGrabPoint()
+    {
+        return handTargetIkTransform;
     }
 }

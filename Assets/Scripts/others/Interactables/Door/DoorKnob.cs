@@ -5,7 +5,8 @@ using UnityEngine;
 public class DoorKnob : MonoBehaviour, IInteractable
 {
     private Door door;
-
+    [SerializeField] private Transform[] fingersTargetTransforms;
+ 
     private void Awake()
     {
         door = GetComponentInParent<Door>();
@@ -22,6 +23,11 @@ public class DoorKnob : MonoBehaviour, IInteractable
 
     public Transform[] GetHandFingersTargetTransforms()
     {
-        return null;
+        return fingersTargetTransforms;
+    }
+
+    public Transform GetObjectTransform()
+    {
+        return transform;
     }
 }

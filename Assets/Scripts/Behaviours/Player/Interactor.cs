@@ -13,7 +13,7 @@ public class Interactor : MonoBehaviour
 
     // ik Session
     [SerializeField] private PlayerIK playerIK;
-
+    [SerializeField] private float doorInteractRange = 1.0f;
 
     private void Start()
     {
@@ -34,10 +34,25 @@ public class Interactor : MonoBehaviour
         {
             if(hit.collider.TryGetComponent(out IInteractable interactable))
             {
-                playerIK.MoveRightHandTo(interactable.GetHandTargetTransform(), () =>
+                if(interactable is DoorKnob)
                 {
-                    interactable.Interact();   // interact through interface
-                });
+                    float distanceToDoor = Vector3.Distance(transform.position, interactable.GetObjectTransform().position);
+                    Debug.Log(distanceToDoor);
+
+                    if(distanceToDoor <= doorInteractRange)
+                    {
+                        playerIK.MoveRightHandTo(interactable.GetHandTargetTransform(), () =>
+                        {
+                            interactable.Interact();   // interact through interface
+                        });
+                    }
+
+                   
+                }
+                else
+                {
+                    interactable.Interact();
+                }
               
             }
         }

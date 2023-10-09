@@ -21,8 +21,7 @@ public class FirstPersonController : MonoBehaviour
     public bool invertCamera = false;
     public bool cameraCanMove = true;
     public float mouseSensitivity = 0.1f; // Changed 2 To 0.1 Because New inputSystem Values High
-    public float maxLookAngle = 50f;
-    private float cameraUpAngle;
+    public float maxLookAngleVertic = 50f;
 
     // Crosshair
     public bool lockCursor = true;
@@ -32,7 +31,8 @@ public class FirstPersonController : MonoBehaviour
 
     // Internal Variables
     private float yaw = 0.0f;
-    private float pitch = 0.0f;
+    private float pitchX = 0.0f;
+    //private float pitchY = 0.0f;
     private Image crosshairObject;
 
     #region Camera Zoom Variables
@@ -127,11 +127,14 @@ public class FirstPersonController : MonoBehaviour
     private InputManager inputManager;
     #endregion
 
+    private CameraController cameraController;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
 
         crosshairObject = GetComponentInChildren<Image>();
+        cameraController = FindObjectOfType<CameraController>();
 
         // Set internal variables
         playerCamera.fieldOfView = fov;
@@ -248,33 +251,33 @@ public class FirstPersonController : MonoBehaviour
 
     private void Update()
     {
-        // Debugging
-        //Debug.Log(walkSpeed);
-
 
         #region Camera
 
         // Control camera movement
         if (cameraCanMove)
-        {                                       // Shifted New Input System
-            yaw = transform.localEulerAngles.y + /*Input.GetAxis("Mouse X")*/ inputManager.GetmouseDelta().x * mouseSensitivity;
+        {
+            yaw = transform.localEulerAngles.y + inputManager.GetmouseDelta().x * mouseSensitivity;
 
             if (!invertCamera)
-            {                                   // Shifted New Input System
-                pitch -= mouseSensitivity * /*Input.GetAxis("Mouse Y")*/ inputManager.GetmouseDelta().y;
+            {                                   
+                pitchX -= mouseSensitivity * inputManager.GetmouseDelta().y;
+                //pitchY -= mouseSensitivity * inputManager.GetmouseDelta().x;
             }
             else
             {
-                // Inverted Y                   // Shifted New Input System
-                pitch += mouseSensitivity * /*Input.GetAxis("Mouse Y")*/ inputManager.GetmouseDelta().y;
+                // Inverted Y                   
+                pitchX += mouseSensitivity * inputManager.GetmouseDelta().y;
+                //pitchY += mouseSensitivity * inputManager.GetmouseDelta().x;
             }
 
             // Clamp pitch between lookAngle
-            pitch = Mathf.Clamp(pitch, -maxLookAngle, maxLookAngle);
+            pitchX = Mathf.Clamp(pitchX, -maxLookAngleVertic, maxLookAngleVertic);
 
-            transform.localEulerAngles = new Vector3(0, yaw, 0);
-            playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
+             transform.localEulerAngles = new Vector3(0, yaw, 0);                // Handled By camera Controller
+            //playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0); // Handled By camera Controller
         }
+
 
 
 
@@ -284,8 +287,7 @@ public class FirstPersonController : MonoBehaviour
         {
             // Changes isZoomed when key is pressed
             // Behavior for toogle zoom
-            // Shifted to New Input system
-            if (/*Input.GetKeyDown(zoomKey)*/ inputManager.IsPressingMouseRightClick() && !holdToZoom && !isSprinting)
+            if (inputManager.IsPressingMouseRightClick() && !holdToZoom && !isSprinting)
             {
                 if (!isZoomed)
                 {
@@ -299,7 +301,6 @@ public class FirstPersonController : MonoBehaviour
 
             // Changes isZoomed when key is pressed
             // Behavior for hold to zoom
-            // Shifted to New Input system
             if (holdToZoom && !isSprinting)
             {
                 if (inputManager.IsPressingMouseRightClick())
@@ -377,42 +378,6 @@ public class FirstPersonController : MonoBehaviour
 
         #endregion
 
-        //#region Jump
-
-        //// Gets input and calls jump method
-        //if (enableJump && Input.GetKeyDown(jumpKey) && isGrounded)
-        //{
-        //    Jump();
-        //}
-
-        //#endregion
-
-        #region Crouch
-
-        //if (enableCrouch) // Old Input System
-        //{        // Shifted to New Input system
-            //if (Input.GetKeyDown(crouchKey) && !holdToCrouch)
-            //{
-            //    Crouch();
-            //    Debug.Log("Croch Called 1");
-            //}
-            //     // Shifted to New Input system
-            //if (Input.GetKeyDown(crouchKey) && holdToCrouch)
-            //{
-            //    isCrouched = false;
-            //    Crouch();
-            //    Debug.Log("Croch Called 2");
-            //}    // Shifted to New Input system
-            //else if (Input.GetKeyUp(crouchKey) && holdToCrouch)
-            //{
-            //    isCrouched = true;
-            //    Crouch();
-            //    Debug.Log("Croch Called 3");
-            //}
-        //}
-
-        #endregion
-
         CheckGround();
 
         if (enableHeadBob)
@@ -427,9 +392,9 @@ public class FirstPersonController : MonoBehaviour
 
         if (playerCanMove)
         {
+            Vector3 targetVelocity =  inputManager.GetInputAxisXAndZ();
             // Calculate how fast we should be moving
-            //Vector3 targetVelocity = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); // Old input To New
-            Vector3 targetVelocity = inputManager.GetInputAxisXAndZ();
+            //Vector3 targetVelocity = inputManager.GetInputAxisXAndZ().x * cameraController.transform.right + inputManager.GetInputAxisXAndZ().z * cameraController.transform.forward;
 
             // Checks if player is walking and isGrounded
             // Will allow head bob
@@ -443,8 +408,7 @@ public class FirstPersonController : MonoBehaviour
             }
 
             // All movement calculations shile sprint is active
-            if (enableSprint && /*Input.GetKey(sprintKey)*/ inputManager.IsPressingSprintKey()
-                             && sprintRemaining > 0f && !isSprintCooldown)
+            if (enableSprint && inputManager.IsPressingSprintKey() && sprintRemaining > 0f && !isSprintCooldown)
             {
                 targetVelocity = transform.TransformDirection(targetVelocity) * sprintSpeed;
 
@@ -505,11 +469,14 @@ public class FirstPersonController : MonoBehaviour
     }
 
     // Can move Camera With Tweening.
-    public void ResetCameraYRotation(float duration, Ease rotEaseMode = Ease.Linear)
+    public float GetCameraPitchX()
     {
-        playerCamera.transform.DOLocalRotate(new Vector3(
-            playerCamera.transform.rotation.x, 0, playerCamera.transform.rotation.z), duration).SetEase(rotEaseMode);
+        return pitchX;
     }
+    //public float GetCameraPitchY()
+    //{
+    //    return pitchY;
+    //}
 
     // Sets isGrounded based on a raycast sent straigth down from the player object
     private void CheckGround()
@@ -606,5 +573,7 @@ public class FirstPersonController : MonoBehaviour
         inputManager.inputActions.Player.CrouchKey.performed -= CrouchKey_performed;
         inputManager.inputActions.Player.CrouchKey.canceled -= CrouchKey_canceled;
     }
+
+   
 }
 

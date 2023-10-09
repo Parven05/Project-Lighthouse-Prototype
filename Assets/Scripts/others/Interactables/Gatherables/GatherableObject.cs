@@ -44,4 +44,9 @@ public class GatherableObject : MonoBehaviour,IInteractable
     {
         return null;
     }
+
+    public Transform GetObjectTransform()
+    {
+        return transform;
+    }
 }
