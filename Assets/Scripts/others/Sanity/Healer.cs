@@ -21,7 +21,7 @@ public class Healer : MonoBehaviour
         if (other.TryGetComponent(out PlayerFearSystem playerFearSystem))
         {
             Debug.Log("Player Entered Heal Point");
-            playerFearSystem.SetIsHealing(true);
+            playerFearSystem.SetPlayerFearState(PlayerFearSystem.PlayerFearState.Healing);
         }
     }
     private void OnTriggerExit(Collider other)
@@ -29,7 +29,7 @@ public class Healer : MonoBehaviour
         if (other.TryGetComponent(out PlayerFearSystem playerFearSystem))
         {
             Debug.Log("Player Exited Heal Point");
-            playerFearSystem.SetIsHealing(false);
+            playerFearSystem.SetPlayerFearState(PlayerFearSystem.PlayerFearState.Idle);
         }
     }
 }
