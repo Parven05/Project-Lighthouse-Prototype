@@ -18,7 +18,7 @@ public class FearSystemPoint : MonoBehaviour
     {
         if(other.TryGetComponent(out PlayerFearSystem playerFearSystem))
         {
-            Debug.Log("Player Entered");
+            //Debug.Log("Player Entered");
             playerFearSystem.SetPlayerFearState(PlayerFearSystem.PlayerFearState.OnFear,fearLevel);
             
             //targetvictimTranform = playerFearSystem.gameObject.transform;

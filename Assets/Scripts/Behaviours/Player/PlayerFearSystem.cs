@@ -115,7 +115,7 @@ public class PlayerFearSystem : MonoBehaviour
 
             // Track Spening Time On Dark
             PLAYER_SPENDING_TIME_DARK += Time.deltaTime;
-            Debug.Log("Player Sepending Time On Dark :" + PLAYER_SPENDING_TIME_DARK);
+            //Debug.Log("Player Sepending Time On Dark :" + PLAYER_SPENDING_TIME_DARK);
         }
     }
 

@@ -18,7 +18,6 @@ public class Torch : MonoBehaviour
     [SerializeField] private float currentBatteryHealth = 0;
     public bool canUseTorch = false;
 
-
     private void OnEnable()
     {
         OnTorchEquiped?.Invoke(this, EventArgs.Empty);
@@ -109,7 +108,6 @@ public class Torch : MonoBehaviour
     private void OnDisable()
     {
         //InputManager.Instance.OnReloadKeyPerformed -= InputManager_Instance_OnReloadKeyPerformed;
-
         OnTorchUnEquiped?.Invoke(this, EventArgs.Empty);
     }
 
@@ -117,4 +115,6 @@ public class Torch : MonoBehaviour
     {
         return handTargetIkTransform;
     }
+
+
 }

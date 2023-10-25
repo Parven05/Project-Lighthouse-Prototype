@@ -11,6 +11,8 @@ using System;
 
 public class FirstPersonController : MonoBehaviour
 {
+    public static FirstPersonController Instance {  get; private set; }
+
     private Rigidbody rb;
 
     #region Camera Movement Variables
@@ -131,6 +133,8 @@ public class FirstPersonController : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
+
         rb = GetComponent<Rigidbody>();
 
         crosshairObject = GetComponentInChildren<Image>();

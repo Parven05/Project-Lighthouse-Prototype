@@ -58,6 +58,9 @@ public class SafeZonePoint : MonoBehaviour
         collider.isTrigger = true;
         collider.radius = safeZoneRadius;
 
+        LayerMask layerMask = LayerMask.NameToLayer("HealPoints");
+        go.layer = layerMask;
+
         // Adding Script
         var healer = go.AddComponent<Healer>();
         healer.ActivateHealing();

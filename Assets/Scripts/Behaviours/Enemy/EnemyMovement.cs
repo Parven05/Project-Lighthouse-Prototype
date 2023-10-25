@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,11 +6,12 @@ public class EnemyMovement : MonoBehaviour
 {
     [SerializeField] private float speed = 3.0f;
     [SerializeField] private float stoppingDistance = 2f;
-    private NavMeshAgent navMeshAgent;
-    private Vector3 targetTransFormPosition;
-    private Enemy.EnemyState enemyState;
+    public NavMeshAgent navMeshAgent;
+    private Transform targetTransForm = null;
+    private Vector3 targetPosition = Vector3.zero;
     private Action onTargetReachd;
-    
+
+    private bool isReachedTarget = false;
 
     private void Awake()
     {
@@ -28,58 +27,79 @@ public class EnemyMovement : MonoBehaviour
 
     private void Update()
     {
-        if(navMeshAgent != null && targetTransFormPosition != Vector3.zero)
+
+        if (navMeshAgent != null && targetTransForm != null)
         {
-            navMeshAgent.destination = targetTransFormPosition;
+            if (navMeshAgent.isStopped)
+            {
+                navMeshAgent.isStopped = false;
+            }
+
+            navMeshAgent.destination = targetTransForm.position;
 
             // Check if the enemy has reached its target
             if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
             {
                 // The enemy has reached its target
-                 onTargetReachd?.Invoke();
+                onTargetReachd?.Invoke();
+                targetTransForm = null;
+                isReachedTarget = true;
+                navMeshAgent.isStopped = true;
+            }
+            else
+            {
+                isReachedTarget = false;
+            }
+        }
+       
 
-                InitializeDefaultValues();
+
+        if (targetPosition != Vector3.zero)
+        {
+            navMeshAgent.destination = targetPosition;
+
+            // Check if the enemy has reached its target
+            if (!navMeshAgent.pathPending && navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+            {
+                targetPosition = Vector3.zero;
             }
         }
 
     }
-    public void SetTarget(Vector3 targetTranformPosition,Enemy.EnemyState enemyState,Action OnTargetReached)
+
+    public void SetTarget(Transform targetTranform, Action OnTargetReached = null)
     {
-        this.targetTransFormPosition = targetTranformPosition;
-        this.enemyState = enemyState;   
+        this.targetTransForm = targetTranform;
         this.onTargetReachd = OnTargetReached;
 
-        InitializeNavMeshModedValues();
+    }
+    public void SetTarget(Vector3 targetPosition, Action OnTargetReached = null)
+    {
+        this.targetPosition = targetPosition;
+        this.onTargetReachd = OnTargetReached;
     }
 
-    private void InitializeNavMeshModedValues() // initialize Enemy Speed And Stopping Others
+    public void SetAgentSpeed(float newSpeed)
     {
-        if(enemyState == Enemy.EnemyState.idle)
-        {
-             
-        }
-        else if(enemyState == Enemy.EnemyState.IgnoredPlayer)
-        {
+       navMeshAgent.speed = newSpeed;
+    }
+    public void SetAgentAcceleration(float newAcceleration)
+    {
+        navMeshAgent.acceleration = newAcceleration;
+    }
 
-        }
-        else if (enemyState == Enemy.EnemyState.ShoeOff)
-        {
-            navMeshAgent.stoppingDistance = 10f;
-        }
-        else if (enemyState == Enemy.EnemyState.Chase)
-        {
-            navMeshAgent.stoppingDistance = 2f;
-            navMeshAgent.speed = speed * 0.5f;
-        }
-        else if (enemyState == Enemy.EnemyState.DeadChase)
-        {
-            navMeshAgent.stoppingDistance = 2f;
-            navMeshAgent.speed = speed * 0.9f;
-        }
-        else if (enemyState == Enemy.EnemyState.FearedByLight) // Run Fast As U Can Enemy To Escape From Light
-        {
-            navMeshAgent.stoppingDistance = 1f;
-            navMeshAgent.speed = speed * 2f;
-        }
+    public bool HasTarget()
+    {
+        return targetTransForm != null || targetPosition != Vector3.zero;
+    }
+
+    public void ResetAgentSpeed()
+    {
+        navMeshAgent.speed = 3.5f;
+    }
+
+    internal bool HasReachedTarget()
+    {
+        return isReachedTarget;
     }
 }

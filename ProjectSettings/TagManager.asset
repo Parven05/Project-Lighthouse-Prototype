@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CinemachineTarget
   - Enemy
+  - EnemyHidePoints
   layers:
   - Default
   - TransparentFX
@@ -20,8 +21,8 @@ TagManager:
   - InterestPoint
   - Enemy
   - Sensors
-  - 
-  - 
+  - HealPoints
+  - Floor
   - 
   - 
   - 

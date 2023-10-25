@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d8044e70c1c7a04cb9ece9408f66496, type: 3}
+  m_Name: Prefab Container SO
+  m_EditorClassIdentifier: 
+  PlayerPrefab: {fileID: 1876537790703723760, guid: d183e658204f076469daf903d997a207,
+    type: 3}
+  EnemyPrefab: {fileID: 4301461361755637390, guid: 105e3fd8dda57ae44bc5297bd813d51b,
+    type: 3}
+  EnemyDummyPrefab: {fileID: 1651885167295430760, guid: ed57bdc1bf7cbd641a5f1291dcd9c77a,
+    type: 3}

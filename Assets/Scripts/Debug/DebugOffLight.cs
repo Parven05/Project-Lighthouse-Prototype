@@ -13,16 +13,23 @@ public class DebugOffLight : MonoBehaviour
             isLightOn = !isLightOn;
             directionalLight.SetActive(isLightOn);
         }
-        
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        directionalLight.SetActive(false);
+        if(other.gameObject.TryGetComponent(out FirstPersonController _))
+        {
+            directionalLight.SetActive(false);
+        }
+       
     }
 
     private void OnTriggerExit(Collider other)
     {
-        directionalLight.SetActive(true);
+        if (other.gameObject.TryGetComponent(out FirstPersonController _))
+        {
+            directionalLight.SetActive(true);
+        }
     }
 }
