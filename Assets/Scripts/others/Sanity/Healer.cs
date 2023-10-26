@@ -20,26 +20,16 @@ public class Healer : MonoBehaviour
 
         if (other.TryGetComponent(out PlayerFearSystem playerFearSystem))
         {
-            //Debug.Log("Player Entered Heal Point");
             playerFearSystem.SetPlayerFearState(PlayerFearSystem.PlayerFearState.Healing);
         }
 
-        //if(other.TryGetComponent(out ILightAffectable lightAffectable))
-        //{
-        //    lightAffectable.SetLightAffected(true) ;
-        //}
+      
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.TryGetComponent(out PlayerFearSystem playerFearSystem))
         {
-            Debug.Log("Player Exited Heal Point");
             playerFearSystem.SetPlayerFearState(PlayerFearSystem.PlayerFearState.Idle);
         }
-
-        //if (other.TryGetComponent(out ILightAffectable lightAffectable))
-        //{
-        //    lightAffectable.SetLightAffected(false);
-        //}
     }
 }

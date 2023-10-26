@@ -5,6 +5,14 @@ using UnityEngine;
 
 public class EnemyStateManager : MonoBehaviour,ILightAffectable
 {
+    // Debugging Enemy State
+    private enum EnemyState
+    {
+        ChasePlayer,Idle
+    }
+    [Header("Debug Enemy States")]
+    [SerializeField] private EnemyState enemyState = EnemyState.Idle;
+
     public delegate void GainSightEvent(Transform Target);
     public GainSightEvent OnEnemyDetectedTorch;
     public delegate void LoseSightEvent(Transform Target);
@@ -55,6 +63,8 @@ public class EnemyStateManager : MonoBehaviour,ILightAffectable
     [HideInInspector] public EnemyMovement EnemyMovement;
     [HideInInspector] public Room AstrRoom;
 
+
+
     private void Awake()
     {
         EnemyMovement = GetComponent<EnemyMovement>();
@@ -82,6 +92,16 @@ public class EnemyStateManager : MonoBehaviour,ILightAffectable
         if(IsAffectedByLight)
         {
             SwitchEnemyState(FearedStateEnemy);  
+        }
+
+        // Debug Testing
+        if(enemyState == EnemyState.ChasePlayer)
+        {
+            SwitchEnemyState(ChasingStateEnemy);
+        }
+        else if(enemyState == EnemyState.Idle)
+        {
+            currentEnemyState = null;
         }
     }
 
